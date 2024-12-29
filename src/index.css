@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* @import "@fortawesome/fontawesome-free/css/all.min.css"; */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #1f2937;
+  /* height: 20px; */
+}
+
+.my-scrollbar {
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.my-scrollbar::-webkit-scrollbar {
+  height: 12px; /* Set horizontal scrollbar height */
+}
