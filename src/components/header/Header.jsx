@@ -1,16 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "../Container";
 import { openSidebar } from "../../redux/features/toggleSidebarSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../components";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import { Link } from "react-router-dom";
+import { logout } from "../../redux/features/authSlice";
+import { set } from "react-hook-form";
 
 const Header = () => {
-  const dispatch = useDispatch();
+  const userStatus = useSelector((state) => state.auth.status);
+  const userData = useSelector((state) => state.auth.userData);
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    dispatch(logout());
+    setIsDropdownOpen(false);
+  };
   return (
-    <div className="bg-secondary fixed top-0 w-full z-10 ">
+    <div className="realative bg-secondary fixed top-0 w-full z-50 ">
       {/* <Container > */}
       <header className=" text-white px-4 py-2 flex items-center justify-between shadow-md ">
         {/* Logo Section */}
@@ -64,21 +81,55 @@ const Header = () => {
 
         {/* Right Section: Avatar and Buttons */}
         <div className="flex items-center space-x-6">
-          {/* <Button className="flex items-center ">
-            <span className="mr-2 text-gray-300 ">
-              <AddRoundedIcon />
-            </span>
-            Create
-          </Button> */}
-          <Button className="flex items-center">
-            {" "}
-            <AccountCircleOutlinedIcon /> <span className="ml-1">Sign in</span>
-          </Button>
-          <img
-            src="https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg"
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full shadow-md object-cover"
-          />
+          {userStatus && (
+            <Link to="/upload">
+              <Button className="flex items-center ">
+                <span className="mr-2 text-gray-300 ">
+                  <AddRoundedIcon />
+                </span>
+                Create
+              </Button>
+            </Link>
+          )}
+          {!userStatus && (
+            <Link to="/login">
+              <Button className="flex items-center">
+                {" "}
+                <AccountCircleOutlinedIcon />{" "}
+                <span className="ml-1">Sign in</span>
+              </Button>
+            </Link>
+          )}
+          {userStatus && (
+            <img
+              src={userData?.avatar}
+              alt="User Avatar"
+              className="w-10 h-10 rounded-full shadow-md object-cover cursor-pointer"
+              onClick={toggleDropdown}
+            />
+          )}
+
+          {isDropdownOpen && (
+            <div className="absolute  right-6 top-14  bg-slate-700 rounded-lg shadow-lg w-40">
+              <button
+                onClick={() => setIsDropdownOpen(false)}
+                className="w-full text-left"
+              >
+                <Link
+                  to="/dashboard"
+                  className="block px-4 py-2 hover:bg-gray-800 rounded-t-lg text-white"
+                >
+                  Dashboard
+                </Link>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 text-white hover:bg-gray-800 rounded-b-lg"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </header>
       {/* </Container> */}

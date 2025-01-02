@@ -1,48 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Comment, Button } from "../../components";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import SortIcon from "@mui/icons-material/Sort";
-
 import ShareIcon from "@mui/icons-material/Share";
+import { useParams } from "react-router-dom";
+import videoService from "../../services/video.service";
+import { format } from "timeago.js";
 
 const VideoPage = () => {
+  const { videoId } = useParams();
+  const [video, setVideo] = useState(null);
+
+  useEffect(() => {
+    videoService.getVideoById(videoId).then((response) => {
+      setVideo(response.data);
+    });
+  }, []);
+
   return (
-    <div className=" min-h-screen p-2 md:p-4">
+    <div className=" min-h-screen md:p-4">
       {/* Video Section */}
-      <div className=" mx-auto  rounded-lg shadow-md overflow-hidden">
+      <div className=" mx-auto  md:rounded-lg shadow-md overflow-hidden">
         {/* Video Player */}
-        <div className="w-full h-64 sm:h-96 bg-black">
+        <div className="w-full z-30 h-fit mr-4 sm:h-96 bg-black fixed md:relative">
           <video
-            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+            src={video?.videoFile}
             controls
-            className="w-full h-full rounded-lg"
+            autoPlay
+            className="w-full h-full md:rounded-lg"
           ></video>
         </div>
         {/* Video Info Section */}
-        <div className="p-4">
-          <h1 className="text-xl font-semibold mb-2">
-            Exploring the Wonders of the Universe 🌌
-          </h1>
+        <div className="p-4 mt-56 md:mt-0">
+          <h1 className="text-xl font-semibold mb-2">{video?.title}</h1>
           <p className="text-gray-500 text-sm mb-4">
-            1.2M views • Dec 29, 2024
+            {video?.views} views • <span>{format(video?.createdAt)}</span>
           </p>
 
           <div className="flex items-center justify-between">
             {/* Left: Channel Info */}
             <div className="flex items-center space-x-4">
               <img
-                src="https://via.placeholder.com/50"
+                src={video?.owner?.avatar}
                 alt="Avatar"
                 className="w-12 h-12 rounded-full"
               />
               <div>
-                <h3 className="text-lg font-medium">Science Channel</h3>
-                <p className="text-sm text-gray-500">1.8M Subscribers</p>
+                <h3 className="text-lg font-medium">
+                  {video?.owner?.fullName}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {video?.owner?.subscriberCount} Subscribers
+                </p>
               </div>
 
-              <Button className="ml-6 bg-gray-200 text-black hover:bg-gray-400">
-                Subscribe
+              <Button
+                className={`ml-6 bg-gray-200 text-black hover:bg-gray-400`}
+              >
+                {video?.owner?.isSubscribed ? "Subscribed" : "Subscribe"}
               </Button>
             </div>
 
@@ -67,11 +83,7 @@ const VideoPage = () => {
         {/* Description Section */}
         <div className="bg-secondary p-4 rounded-xl text-gray-200">
           <h3 className="text-lg font-semibold">Description</h3>
-          <p className="text-gray-200 mt-2">
-            This video takes you on an incredible journey through the cosmos.
-            Learn about the mysteries of black holes, distant galaxies, and the
-            fundamental forces shaping our universe.
-          </p>
+          <p className=" mt-2 text-gray-400">{video?.description}</p>
         </div>
         {/* Comments Section */}
         <div className="pt-6 px-4">

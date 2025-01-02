@@ -1,27 +1,27 @@
-import React from "react";
+import React, { forwardRef, useId } from "react";
 import PropTypes from "prop-types";
 
-const Input = ({
-  type = "text",
-  label,
-  className = "",
-  placeholder = "",
-  ...props
-}) => {
+const Input = forwardRef(function Input(
+  { label, placeholder, type = "text", className = "", ...props },
+  ref
+) {
+  const id = useId();
   return (
-    <div className={`w-full mb-6 ${className}`.trim()}>
+    <div className={`w-full mt-6 ${className}`.trim()}>
       {label && (
         <label
           className="block text-sm font-medium text-gray-300 mb-2"
-          htmlFor={props.id || props.name}
+          htmlFor={id}
         >
           {label}
         </label>
       )}
       <input
+        ref={ref}
+        id={id}
         type={type}
         className={`
-            text-gray-300
+          text-gray-300
           w-full
           bg-secondary
           px-4
@@ -35,13 +35,15 @@ const Input = ({
           focus:ring-blue-500
           focus:border-blue-500
           transition duration-200
+          focus:bg-secondary
+          focus:text-white
         `}
         {...props}
         placeholder={placeholder}
       />
     </div>
   );
-};
+});
 
 Input.propTypes = {
   type: PropTypes.string,

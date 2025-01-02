@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../utils/api";
 
 export class AuthService {
   /**
@@ -8,14 +9,35 @@ export class AuthService {
    */
   async createUser(userData) {
     try {
-      const response = await axios.post("/users/create", userData);
+      const formData = new FormData();
+
+      // Append avatar file
+      formData.append("avatar", userData.avatar[0]); // Use the first file from the input
+      formData.append("coverImage", userData.coverImage[0]); // Use the first file from the input
+
+      // Append other fields
+      Object.keys(userData).forEach((key) => {
+        if (key !== "avatar" && key !== "coverImage") {
+          formData.append(key, userData[key]);
+        }
+      });
+
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error(
         "ERROR :: creating user::",
         error.response?.data || error.message
       );
-      throw error.response?.data || error.message;
+      throw error.response?.data || "User with this email already exists.";
     }
   }
 
@@ -27,7 +49,10 @@ export class AuthService {
    */
   async loginUser(credentials) {
     try {
-      const response = await axios.post("/users/login", credentials);
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/login",
+        credentials
+      );
       return response.data;
     } catch (error) {
       console.error(
@@ -46,7 +71,7 @@ export class AuthService {
    */
   async logoutUser() {
     try {
-      const response = await axios.post("/users/logout");
+      const response = await api.post("/users/logout");
       return response.data;
     } catch (error) {
       console.error(
@@ -86,7 +111,7 @@ export class AuthService {
 
   async changePassword(credentials) {
     try {
-      const response = await axios.post("/users/change-password", credentials);
+      const response = await api.post("/users/change-password", credentials);
       return response.data;
     } catch (error) {
       console.error(
@@ -94,6 +119,18 @@ export class AuthService {
         error.response?.data || error.message
       );
       throw error.response?.data || error.message;
+    }
+  }
+  async forgetPassword(credentials) {
+    try {
+      const response = await api.patch("/users/forget-password", credentials);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "ERROR :: forgeting password::",
+        error.response?.data || error.message
+      );
+      throw "Envalid Email. Please enter valid Email.";
     }
   }
 
@@ -105,7 +142,7 @@ export class AuthService {
    */
   async getCurrentUser() {
     try {
-      const response = await axios.get("/users/current-user");
+      const response = await api.get("/users/current-user");
       return response.data;
     } catch (error) {
       console.error(
@@ -167,11 +204,10 @@ export class AuthService {
    * @returns {Promise} - Resolves with the API response.
    */
   async updateCoverImage(coverImage) {
+    const formData = new FormData();
+    formData.append("coverImage", coverImage);
     try {
-      const response = await axios.patch(
-        "/users/update-coverimage",
-        coverImage
-      ); // Use relative path
+      const response = await api.patch("/users/update-coverimage", formData); // Use relative path
       return response.data;
     } catch (error) {
       console.error(

@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../utils/api";
 
 export class DashboardService {
   /**
@@ -9,7 +10,7 @@ export class DashboardService {
 
   async getChannelStats() {
     try {
-      const response = await axios.get("/dashboard/my-dashboard");
+      const response = await api.get("/dashboard/my-dashboard");
       return response.data;
     } catch (error) {
       console.error(
@@ -23,15 +24,11 @@ export class DashboardService {
   // GET CHANNEL VIDEOS
   async getChannelVideos(queries) {
     try {
-      const response = await axios.get("/dashboard/my-videos", {
+      const response = await api.get("/dashboard/my-videos", {
         params: queries,
       });
       return response.data;
     } catch (error) {
-      console.error(
-        "ERROR :: getting channel videos::",
-        error.response?.data || error.message
-      );
       throw error.response?.data || error.message;
     }
   }

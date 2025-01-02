@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../utils/api";
 
 export class VideoService {
   /**
@@ -8,9 +9,22 @@ export class VideoService {
    * @throws Will throw an error if the upload fails.
    */
 
-  async uploadVideo(videoData) {
+  async uploadVideo(data) {
+    const formData = new FormData();
+
+    // Append avatar file
+    formData.append("videoFile", data.videoFile[0]);
+    formData.append("thumbnail", data.thumbnail[0]);
+
+    // Append other fields
+    Object.keys(data).forEach((key) => {
+      if (key !== "thumbnail" && key !== "videoFile") {
+        formData.append(key, data[key]);
+      }
+    });
+
     try {
-      const response = await axios.post("/videos/upload-video", videoData);
+      const response = await api.post("/videos/upload-video", formData);
       return response.data;
     } catch (error) {
       console.error(
@@ -31,7 +45,7 @@ export class VideoService {
    */
   async getAllVideos(queries) {
     try {
-      const response = await axios.get("/videos/", {
+      const response = await api.get("/videos", {
         params: queries,
       });
       return response.data;
@@ -55,7 +69,7 @@ export class VideoService {
 
   async getVideoById(videoId) {
     try {
-      const response = await axios.get(`/videos/${videoId}`);
+      const response = await api.get(`/videos/${videoId}`);
       return response.data;
     } catch (error) {
       console.error(

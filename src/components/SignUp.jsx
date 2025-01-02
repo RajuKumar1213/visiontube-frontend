@@ -2,9 +2,47 @@ import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import GoogleIcon from "@mui/icons-material/Google";
+import { useForm } from "react-hook-form";
+import authService from "../services/auth.service";
+import { useNavigate } from "react-router-dom";
+import spinner from "/spinner.svg";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleSignup = (data) => {
+    setLoading(true);
+    setError("");
+    if (!data) {
+      console.log("No data found");
+    }
+    authService
+      .createUser(data)
+      .then((response) => {
+        if (response.statusCode == 200) {
+          navigate("/login");
+        }
+        setLoading(false);
+        setError("");
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+        console.log("Error logging in:", error);
+      });
+
+    // Your signup logic here
+  };
+
   const [showModal, setShowModal] = useState(false);
 
   const handleGoogleSignIn = () => {
@@ -25,20 +63,113 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-96 flex flex-col items-center justify-center ">
-      <div className="bg-secondary shadow-lg rounded-lg p-8 w-full max-w-sm">
+    <div className="w-full min-h-96 flex flex-col items-center justify-center ">
+      <div className=" flex flex-col bg-secondary shadow-lg rounded-lg p-8 w-full max-w-xl">
         <h1 className="text-2xl font-semibold text-gray-300 mb-6 text-center">
           Sign Up to VisionTube
         </h1>
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
         {/* Email Input */}
-        <Input
-          label={"Email :"}
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          placeholder="Enter your email"
-        />
+        <form onSubmit={handleSubmit(handleSignup)}>
+          <Input
+            label={"Full name :"}
+            type="text"
+            placeholder="Enter your full name"
+            {...register("fullName", {
+              required: "Full name is required",
+            })}
+          />
+          {errors.fullName && (
+            <p className="text-red-500 text-sm mt-1">{errors?.name?.message}</p>
+          )}
+          <Input
+            label={"Username :"}
+            type="text"
+            placeholder="Enter your full name"
+            {...register("username", {
+              required: "Username is required and should be unique",
+              minLength: {
+                value: 3,
+                message: "Username should be at least 3 characters long",
+              },
+            })}
+          />
+          {errors.username && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors?.username?.message}
+            </p>
+          )}
+
+          <Input
+            label={"Email :"}
+            type="email"
+            placeholder="Enter your email"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm ">{errors?.email?.message}</p>
+          )}
+
+          <Input
+            label={"Password :"}
+            type="password"
+            placeholder="Enter your email"
+            {...register("password", {
+              required: "password is required",
+            })}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm ">{errors?.email?.message}</p>
+          )}
+
+          <Input
+            label={"Profile Image :"}
+            type="file"
+            placeholder="Enter your full name"
+            accept="image/png, image/jpg, image/jpeg, image/gif, image/webp"
+            {...register("avatar", {
+              required: "Profile image is required",
+            })}
+          />
+          {errors.avatar && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors?.avatar?.message}
+            </p>
+          )}
+          <Input
+            label={"Cover Image (Optional) :"}
+            type="file"
+            placeholder="Enter your full name"
+            accept="image/png, image/jpg, image/jpeg, image/gif, image/webp"
+            {...register("coverImage", {
+              required: false,
+            })}
+          />
+          {errors.coverImage && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.coverImage.message}
+            </p>
+          )}
+          <div className="w-full  mt-6 ">
+            {
+              <Button
+                type="submit"
+                className="mx-auto w-full flex justify-center"
+              >
+                {loading && <img src={spinner} alt="" className="w-6 mr-4 " />}
+                Sign up
+              </Button>
+            }
+          </div>
+        </form>
+        <p className="text-center my-4 text-gray-500">or</p>
 
         {/* Sign Up with Google */}
         <Button

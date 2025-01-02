@@ -25,3 +25,14 @@
 .my-scrollbar::-webkit-scrollbar {
   height: 12px; /* Set horizontal scrollbar height */
 }
+
+input:-webkit-autofill {
+  background-color: #1e293b !important; /* Dark background for autofill */
+  -webkit-box-shadow: 0 0 0px 1000px #1e293b inset !important; /* Match input background */
+  color: white !important; /* Adjust text color */
+}
+
+input::selection {
+  background-color: #333333; /* Darker background */
+  color: white; /* Text color for visibility */
+}

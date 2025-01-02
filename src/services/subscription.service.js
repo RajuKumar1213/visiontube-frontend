@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 
 class SubscriptionService {
   // TOGGLE SUBCRIBE
@@ -11,7 +11,7 @@ class SubscriptionService {
    * */
   async toggleSubscribe(channelId) {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `/subscriptions/t-subscribe/${channelId}`
       );
       return response.data;
@@ -28,9 +28,8 @@ class SubscriptionService {
 
   async getChannelSubscribers(channelId) {
     try {
-      const response = await axios.get(
-        `/subscriptions/subscribers/${channelId}`
-      );
+      const response = await api.get(`/subscriptions/subscribers/${channelId}`);
+
       return response.data;
     } catch (error) {
       console.error(
@@ -45,7 +44,7 @@ class SubscriptionService {
 
   async getSubscribedChannels(channelId) {
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `/subscriptions/subscribed-channels/${channelId}`
       );
       return response.data;
@@ -59,6 +58,6 @@ class SubscriptionService {
   }
 }
 
-const subscriptionSchema = new SubscriptionService();
+const subscriptionService = new SubscriptionService();
 
-export default subscriptionSchema;
+export default subscriptionService;

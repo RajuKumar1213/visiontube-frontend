@@ -4,11 +4,11 @@ import PlaylistPlayOutlinedIcon from "@mui/icons-material/PlaylistPlayOutlined";
 
 const Playlist = () => {
   return (
-    <div className="relative flex flex-col w-64 mb-2">
+    <div className="relative flex flex-col w-64 m-4">
       <img
         src="https://cdn.pixabay.com/photo/2020/06/03/15/11/tree-5255288_1280.jpg"
         alt="Playlist Cover"
-        className="w-full h-40 rounded mr-4 object-cover"
+        className="w-full h-40 rounded-lg mr-4 object-cover"
       />
       <p className="bg-secondary px-2 rounded-md bg-opacity-75 text-xs  absolute bottom-14 right-2 ">
         {" "}

@@ -1,62 +1,48 @@
 import { useEffect } from "react";
-import authService from "./services/auth.service.js";
 import { useState } from "react";
-import {
-  Container,
-  Header,
-  Sidebar,
-  SignUp,
-  VideoCard,
-  VideoPage,
-  HomePageInLogout,
-  FixedSidebar,
-  Dashboard,
-  UploadVideo,
-  Playlist,
-} from "./components/index.js";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout } from "./redux/features/authSlice.js";
+import authService from "./services/auth.service.js";
+import { Header, FixedSidebar, Container, Sidebar } from "./components";
+import { Outlet } from "react-router-dom";
+import spinner from "/spinner.svg";
 
 function App() {
-  // const [data, setData] = useState([]);
-  // useEffect(() => {
-  //   authService
-  //     .getChannelProfile("abhik")
-  //     .then((res) => setData(res))
-  //     .catch((err) => console.log(err));
-  // }, []);
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const userStatus = useSelector((state) => state.auth.status);
 
-  // console.log(data);
+  useEffect(() => {
+    const authenticated = localStorage.getItem("accessToken");
 
-  return (
-    <div>
+    if (authenticated && userStatus == false) {
+      authService
+        .getCurrentUser()
+        .then((userData) => {
+          if (userData) {
+            dispatch(login(userData.data));
+          } else {
+            dispatch(logout());
+          }
+        })
+        .finally(() => setLoading(false));
+    } else {
+      dispatch(logout());
+      setLoading(false);
+    }
+  }, []);
+
+  return !loading ? (
+    <div className="min-h-screen box-border text-white ">
       <Header />
-      <Container>
-        <div className="pt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-        </div>
-      </Container>
-
-      <Sidebar />
       <FixedSidebar />
-      <Dashboard />
-      <UploadVideo />
-      <Container width="max-w-6xl">
-        <VideoPage />
-
-        <SignUp />
-        <HomePageInLogout />
-        <Playlist />
+      <Sidebar />
+      <Container>
+        <Outlet />
       </Container>
     </div>
+  ) : (
+    <img src={spinner} alt="" className="w-24 mx-auto my-auto h-screen" />
   );
 }
-
 export default App;

@@ -15,8 +15,19 @@ import Card from "./Card";
 import RecentSubscribers from "./RecentSubscribers";
 import UploadVideo from "./video/UploadVideo";
 import Playlist from "./playlist/Playlist";
+import CreatePlaylist from "./playlist/CreatePlaylist";
+import AuthLayout from "./AuthLayout";
+import NotUserThenYou from "./ifNotLoggedIn/NotUserThenYou";
+import NotUserThenHistory from "./ifNotLoggedIn/NotUserThenHistory";
+import NotUserThenSubscription from "./ifNotLoggedIn/NotUserThenSubscription";
+import NotUserThenLikedVid from "./ifNotLoggedIn/NotUserThenLikedVid";
+import Login from "./Login";
 
 export {
+  NotUserThenLikedVid,
+  NotUserThenSubscription,
+  NotUserThenHistory,
+  NotUserThenYou,
   Header,
   Container,
   Sidebar,
@@ -34,4 +45,7 @@ export {
   RecentSubscribers,
   UploadVideo,
   Playlist,
+  CreatePlaylist,
+  AuthLayout,
+  Login,
 };
