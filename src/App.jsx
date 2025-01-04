@@ -6,11 +6,14 @@ import authService from "./services/auth.service.js";
 import { Header, FixedSidebar, Container, Sidebar } from "./components";
 import { Outlet } from "react-router-dom";
 import spinner from "/spinner.svg";
+import LoadingBar from "react-top-loading-bar";
+import { setProgress } from "./redux/features/progressSlice.js";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const userStatus = useSelector((state) => state.auth.status);
+  const progress = useSelector((state) => state.progress.progress);
 
   useEffect(() => {
     const authenticated = localStorage.getItem("accessToken");
@@ -34,6 +37,11 @@ function App() {
 
   return !loading ? (
     <div className="min-h-screen box-border text-white ">
+      <LoadingBar
+        color="#f11946"
+        progress={progress}
+        onLoaderFinished={() => dispatch(setProgress(0))}
+      />
       <Header />
       <FixedSidebar />
       <Sidebar />

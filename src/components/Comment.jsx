@@ -1,43 +1,126 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+import commentService from "../services/comment.service";
 
-function Comment({ props }) {
+function Comment({
+  props,
+  userData,
+  video,
+  setComment,
+  setCommentId,
+  setContent,
+}) {
+  const [activeCommentId, setActiveCommentId] = useState(null);
+
+  // Function to toggle menu visibility
+  const handleMenuToggle = (commentId) => {
+    setActiveCommentId((prev) => (prev === commentId ? null : commentId));
+  };
+
+  // Close the menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".menu-box")) {
+        setActiveCommentId(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="space-y-4">
-      {/* Comment */}
-      <div className="flex items-start space-x-4">
-        <img
-          src="https://via.placeholder.com/40"
-          alt="User Avatar"
-          className="w-10 h-10 rounded-full"
-        />
-        <div>
-          <h4 className="font-medium">John Doe</h4>
-          <p className="text-gray-600 text-sm mb-2">
-            Absolutely mind-blowing! Thanks for this amazing content. 🌟
-          </p>
-          <span className="items-center space-x-2 mr-4 text-sm">
-            <ThumbUpAltOutlinedIcon style={{ fontSize: "20px" }} /> 220
-          </span>
-          <span>
-            <ThumbDownAltOutlinedIcon style={{ fontSize: "20px" }} />
-          </span>
+    <div
+      className={`mb-3 p-2 rounded-lg ${
+        userData?._id == video?.owner?._id
+          ? "bg-yellow-950  border-l-4 border-yellow-500 shadow-md"
+          : ""
+      }`}
+    >
+      <div className="relative flex items-center justify-between">
+        <div className="flex items-center">
+          {userData?._id == video?.owner?._id && (
+            <span className="text-sm font-semibold text-yellow-600 mr-2">
+              Creator
+            </span>
+          )}
+          <div className="space-y-4">
+            {/* Comment */}
+            <div className="flex items-center justify-between w-full flex-wrap ">
+              <div className="flex items-center space-x-4">
+                <img
+                  src={
+                    props?.owner?.avatar || "https://via.placeholder.com/150"
+                  }
+                  alt="User Avatar"
+                  className="w-10 h-10 rounded-full"
+                />
+                <div className="w-full min-w-72">
+                  <h4 className="text-sm text-gray-500">
+                    {props?.owner?.username}
+                  </h4>
+                  <p className="text-gray-200  ">{props?.content}</p>
+                  <span className="items-center space-x-2 mr-4 text-xs">
+                    <ThumbUpAltOutlinedIcon style={{ fontSize: "20px" }} /> 220
+                  </span>
+                  <span className="text-xs">
+                    <ThumbDownAltOutlinedIcon style={{ fontSize: "20px" }} />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      {/* Another Comment */}
-      <div className="flex items-start space-x-4">
-        <img
-          src="https://via.placeholder.com/40"
-          alt="User Avatar"
-          className="w-10 h-10 rounded-full"
-        />
-        <div>
-          <h4 className="font-medium">Jane Smith</h4>
-          <p className="text-gray-600 text-sm">
-            I learned so much about space. Keep up the great work! 🚀
-          </p>
-        </div>
+        {userData?._id === props.owner?._id && (
+          <div className="text-xs text-gray-400 z-40">
+            <MoreVertOutlinedIcon
+              className="cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent event from bubbling up
+                handleMenuToggle(props?._id);
+              }}
+            />
+          </div>
+        )}
+
+        {activeCommentId === props?._id && (
+          <div className="menu-box absolute top-8 right-0 bg-gray-800 text-white p-2 rounded-md shadow-lg z-40">
+            <ul className="">
+              <li
+                className="cursor-pointer rounded-md hover:bg-gray-700 px-4 py-2 flex items-start gap-x-2"
+                onClick={() => {
+                  setCommentId(props?._id);
+                  setContent(props?.content);
+                  setActiveCommentId(null);
+                }}
+              >
+                <EditOutlinedIcon /> <span>Edit</span>
+              </li>
+              <li
+                className="cursor-pointer rounded-md hover:bg-gray-700 px-4 py-2 flex items-start gap-x-2 "
+                onClick={() => {
+                  commentService.deleteComment(props?._id).then((res) => {
+                    if (res.statusCode === 200) {
+                      setComment((prev) =>
+                        prev.filter((comment) => comment._id !== props?._id)
+                      );
+                    }
+                  });
+                  setActiveCommentId(null); // Close menu after action
+                }}
+              >
+                <DeleteForeverOutlinedIcon style={{ color: "red" }} />{" "}
+                <span>Delete</span>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

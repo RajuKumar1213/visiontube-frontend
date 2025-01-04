@@ -248,11 +248,33 @@ export class AuthService {
    */
   async getWatchHistory() {
     try {
-      const response = await axios.get("/users/watch-history");
+      const response = await api.get("/users/watch-history");
       return response.data;
     } catch (error) {
       console.error(
         "ERROR :: getting watch history::",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
+    }
+  }
+
+  // ADD VIDEO TO WATCH HISTORY
+
+  /**
+   * Service to add a video to the user's watch history using Axios.
+   * @param {string} videoId - The ID of the video to add to the watch history.
+   * @returns {Promise} - Resolves with the API response.
+   */
+  async addToWatchHistory(videoId) {
+    try {
+      const response = await api.patch("/users/make-watch-history", {
+        videoId,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "ERROR :: adding video to watch history::",
         error.response?.data || error.message
       );
       throw error.response?.data || error.message;

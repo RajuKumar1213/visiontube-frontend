@@ -2,17 +2,12 @@ import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import RecentSubscribers from "./RecentSubscribers";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Link } from "react-router-dom";
 import dashboardService from "../services/dashboard.service";
-import { format } from "timeago.js";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
-import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import subscriptionService from "../services/subscription.service";
 import { useSelector } from "react-redux";
 
 import Modal from "./Modal";
+import MyRecentVideos from "./MyRecentVideos";
 
 const Dashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
@@ -92,15 +87,6 @@ const Dashboard = () => {
       <div className="relative flex items-center flex-col justify-center gap-4">
         <div className="relative -top-16 group w-36 h-36 -mb-14">
           <img
-            onClick={() => (
-              setIsModalOpen(true),
-              (
-                <Modal
-                  onClose={() => setIsModalOpen(false)}
-                  oldImageUrl={channelStatus?.coverImage}
-                />
-              )
-            )}
             src={channelStatus?.avatar || "https://via.placeholder.com/150"}
             alt="User Avatar"
             className="w-36 h-36 rounded-full border-4 object-cover border-white"
@@ -160,47 +146,7 @@ const Dashboard = () => {
             </p>
           )}
           {recentUploaedVideos?.map((video) => (
-            <div
-              key={video?._id}
-              className=" p-6 w-full bg-secondary my-4 rounded-xl"
-            >
-              {/* Thumbnail */}
-              <div className="relative flex border-b pb-6 space-x-8">
-                <Link to={`/watch/${video?._id}`}>
-                  <img
-                    src={video?.thumbnail} // Replace with dynamic thumbnail URL
-                    alt="Video Thumbnail"
-                    className=" h-56 md:min-w-80 inline-block object-cover rounded-xl"
-                  />
-                </Link>
-                <div>
-                  <h3 className="text-2xl font-semibold text-gray-300 line-clamp-2 mb-4">
-                    {video?.title.substring(0, 50)}
-                  </h3>
-                  <p className="text-gray-400">{video?.description}</p>
-                </div>
-              </div>
-
-              <div className="flex justify-between pt-4 space-x-3">
-                <div className="flex items-center text-sm text-gray-300 mt-1 gap-x-5">
-                  <p className="flex items-center gap-x-2">
-                    {" "}
-                    <EqualizerOutlinedIcon /> {video?.views}
-                  </p>
-                  <span className="flex items-center justify-center ml-4 gap-x-2">
-                    <ThumbUpOutlinedIcon /> 0
-                  </span>
-                  <span className="flex items-center justify-center ml-4 gap-x-2">
-                    <CommentOutlinedIcon /> 0
-                  </span>
-                </div>
-                <p className="flex items-center gap-x-2">
-                  {" "}
-                  <PublicOutlinedIcon /> First{" "}
-                  {format(video?.createdAt).substring(-9, 7)}
-                </p>
-              </div>
-            </div>
+            <MyRecentVideos key={video._id} props={video} />
           ))}
         </div>
       </div>

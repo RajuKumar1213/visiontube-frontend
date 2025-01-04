@@ -1,10 +1,18 @@
 import React from "react";
 
-function Button({ type = "button", className = "", children, ...props }) {
+function Button({
+  type = "button",
+  className = "",
+  children,
+  py = 2,
+  px = 4,
+  hover = "bg-slate-500",
+  ...props
+}) {
   return (
     <button
       type={type}
-      className={`${className} ring-1 ring-slate-700 text-white px-5 py-1.5  hover:bg-slate-700 transition duration-200 rounded-full`}
+      className={`${className} ring-1 ring-slate-700  px-${px} py-${py} hover:${hover} transition duration-200 rounded-full`}
       {...props}
     >
       {children}

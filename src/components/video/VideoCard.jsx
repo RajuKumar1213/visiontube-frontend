@@ -1,30 +1,49 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 import { format } from "timeago.js";
-import { Link } from "react-router-dom";
+import authService from "../../services/auth.service";
+import videoService from "../../services/video.service";
+import { useNavigate } from "react-router-dom";
 
 const VideoCard = ({ props, className = "", flexcol = "", hidden = "" }) => {
+  const navigate = useNavigate();
+  const handleMakeVideoWatchAndHistory = () => {
+    authService
+      .addToWatchHistory(props?._id)
+      .then((res) => {
+        if (res.statusCode === 200) {
+          navigate(`/watch/${props?._id}`);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    // Increment views count
+    videoService.incrementViewsCount(props?._id);
+  };
+
   return (
     <div
       className={`${flexcol} cursor-pointer p-2 md:min-w-[300px] w-full max-w-xl shadow-lg hover:shadow-xl transition duration-300 rounded-lg transform hover:scale-[1.02]`}
     >
       {/* Thumbnail */}
-      <Link to={`/watch/${props?._id}`}>
-        <div className="relative rounded-xl">
-          <img
-            src={props?.thumbnail} // Replace with dynamic thumbnail URL
-            alt="Video Thumbnail"
-            className={` ${className} object-cover rounded-2xl`}
-          />
-          {/* Video Duration */}
-          <div className="absolute bottom-2 right-2 bg-black bg-opacity-55 text-white text-sm px-2.5 py-0.5 rounded-md">
-            {(props?.duration / 60).toFixed(2)}
-          </div>
+      {/* <Link to={`/watch/${props?._id}`}> */}
+      <div className="relative rounded-xl">
+        <img
+          onClick={handleMakeVideoWatchAndHistory}
+          src={props?.thumbnail} // Replace with dynamic thumbnail URL
+          alt="Video Thumbnail"
+          className={` ${className} object-cover rounded-2xl`}
+        />
+        {/* Video Duration */}
+        <div className="absolute bottom-2 right-2 bg-black bg-opacity-55 text-white text-sm px-2.5 py-0.5 rounded-md">
+          {(props?.duration / 60).toFixed(2)}
         </div>
-      </Link>
+      </div>
+      {/* </Link> */}
 
       {/* Video Info */}
-      <div className="flex p-2 space-x-3 ">
+      <div className="flex p-1 space-x-3 ">
         {/* Channel Avatar */}
         <div className={`${hidden}`}>
           <Avatar

@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 
 export class CommentService {
   // CREATING COMMENT ON VIDEO
@@ -9,12 +9,9 @@ export class CommentService {
    * @returns {Promise} - Resolves with the API response.
    * @throws Will throw an error if the creating comment by video ID fails.
    */
-  async createComment({ videoId, commentData }) {
+  async createComment(videoId, data) {
     try {
-      const response = await axios.post(
-        `/comments/add-comment/${videoId}`,
-        commentData
-      );
+      const response = await api.post(`/comments/add-comment/${videoId}`, data);
       return response.data;
     } catch (error) {
       console.error(
@@ -33,9 +30,9 @@ export class CommentService {
    * @returns {Promise} - Resolves with the API response.
    * @throws Will throw an error if the getting comments by video ID fails.
    */
-  async getCommentsOfVidoe(videoId) {
+  async getCommentsOfVideo(videoId) {
     try {
-      const response = await axios.get(`/comments/all-comments/${videoId}`);
+      const response = await api.get(`/comments/all-comments/${videoId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -54,10 +51,12 @@ export class CommentService {
    * @returns {Promise} - Resolves with the API response.
    * @throws Will throw an error if the updating comment by ID fails.
    */
-  async updateComment(commentId) {
+  async updateComment(commentId, content) {
+    console.log(commentId, content);
     try {
-      const response = await axios.patch(
-        `/comments/update-comment/${commentId}`
+      const response = await api.put(
+        `/comments/update-comment/${commentId}`,
+        content
       );
       return response.data;
     } catch (error) {
@@ -79,7 +78,7 @@ export class CommentService {
    */
   async deleteComment(commentId) {
     try {
-      const response = await axios.delete(
+      const response = await api.delete(
         `/comments/delete-comment/${commentId}`
       );
       return response.data;

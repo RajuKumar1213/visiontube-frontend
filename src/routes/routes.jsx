@@ -14,10 +14,12 @@ import {
   SignupPage,
   UploadVideoPage,
   VideoWatchPage,
+  WatchHistoryPage,
 } from "../pages";
 import NotUserSubscriptionPage from "../pages/not-login-pages/NotUserSubscriptionPage";
 import NotUserThenLikedVidPage from "../pages/not-login-pages/NotUserThenLikedVidPage";
 import ErrorPage from "../components/ErrorPage";
+import VideoEditPage from "../pages/videos/VidoeEditPage";
 
 export const router = createBrowserRouter([
   {
@@ -96,6 +98,22 @@ export const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={true}>
             <DashboardPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/watch-history",
+        element: (
+          <AuthLayout authentication={true}>
+            <WatchHistoryPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/edit-video/:videoId",
+        element: (
+          <AuthLayout authentication={true}>
+            <VideoEditPage />
           </AuthLayout>
         ),
       },

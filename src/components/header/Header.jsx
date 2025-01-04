@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Container from "../Container";
 import { openSidebar } from "../../redux/features/toggleSidebarSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../components";
@@ -7,7 +6,8 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
 import { logout } from "../../redux/features/authSlice";
-import { set } from "react-hook-form";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
 
 const Header = () => {
   const userStatus = useSelector((state) => state.auth.status);
@@ -117,16 +117,16 @@ const Header = () => {
               >
                 <Link
                   to="/dashboard"
-                  className="block px-4 py-2 hover:bg-gray-800 rounded-t-lg text-white"
+                  className="flex items-center px-4 py-2 hover:bg-gray-800 rounded-t-lg text-white"
                 >
-                  Dashboard
+                  <DashboardOutlinedIcon className="mr-2" /> Dashboard
                 </Link>
               </button>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 text-white hover:bg-gray-800 rounded-b-lg"
+                className=" flex items-center justify-start w-full text-left px-4 py-2 text-white hover:bg-gray-800 rounded-b-lg"
               >
-                Logout
+                <ExitToAppOutlinedIcon className="mr-2" /> Logout
               </button>
             </div>
           )}

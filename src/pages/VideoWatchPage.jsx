@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { VideoCard, VideoPage } from "../components";
 import videoService from "../services/video.service";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function VideoWatchPage() {
+  const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     videoService
-      .getAllVideos({ limit: 20, page: 1, sortType: "desc", sortBy: "views" })
+      .getAllVideos(
+        { limit: 20, page: 1, sortType: "desc", sortBy: "views" },
+        dispatch
+      )
       .then((videos) => {
         if (videos.length === 0) return;
         setVideos(videos.data);
       })
 
-      .catch((err) => setError(err));
-  }, []);
+      .catch((err) => console.error(err));
+  }, [videoService]);
 
   return (
     <div className="md:mt-14 mt-10 grid grid-cols-1 md:grid-cols-12 gap-2">

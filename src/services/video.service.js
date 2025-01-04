@@ -1,4 +1,4 @@
-import axios from "axios";
+import { setProgress } from "../redux/features/progressSlice";
 import api from "../utils/api";
 
 export class VideoService {
@@ -9,7 +9,7 @@ export class VideoService {
    * @throws Will throw an error if the upload fails.
    */
 
-  async uploadVideo(data) {
+  async uploadVideo(data, setProgress) {
     const formData = new FormData();
 
     // Append avatar file
@@ -24,9 +24,20 @@ export class VideoService {
     });
 
     try {
-      const response = await api.post("/videos/upload-video", formData);
+      const response = await api.post("/videos/upload-video", formData, {
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            if (setProgress) setProgress(percentCompleted);
+          }
+        },
+      });
+
       return response.data;
     } catch (error) {
+      if (setProgress) setProgress(0);
       console.error(
         "ERROR :: creating user::",
         error.response?.data || error.message
@@ -48,6 +59,7 @@ export class VideoService {
       const response = await api.get("/videos", {
         params: queries,
       });
+
       return response.data;
     } catch (error) {
       console.error(
@@ -70,6 +82,7 @@ export class VideoService {
   async getVideoById(videoId) {
     try {
       const response = await api.get(`/videos/${videoId}`);
+
       return response.data;
     } catch (error) {
       console.error(
@@ -88,12 +101,9 @@ export class VideoService {
    * @returns {Promise} - Resolves with the API response.
    * @throws Will throw an error if the update video fails.
    */
-  async updateVideo(videoData) {
+  async updateVideo(videoId, videoData) {
     try {
-      const response = await axios.patch(
-        `/videos/update/${videoData.id}`,
-        videoData
-      );
+      const response = await api.patch(`/videos/update/${videoId}`, videoData);
       return response.data;
     } catch (error) {
       console.error(
@@ -112,9 +122,9 @@ export class VideoService {
    * @returns {Promise} - Resolves with the API response.
    * @throws Will throw an error if the update thumbnail fails.
    */
-  async updateThumbnail({ vidoeId, thumbnail }) {
+  async updateThumbnail(vidoeId, thumbnail) {
     try {
-      const response = await axios.patch(
+      const response = await api.patch(
         `/videos/update-thumbnail/${vidoeId}`,
         thumbnail
       );
@@ -138,7 +148,7 @@ export class VideoService {
    * */
   async deleteVideo(videoId) {
     try {
-      const response = await axios.delete(`/videos/delete/${videoId}`);
+      const response = await api.delete(`/videos/delete/${videoId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -159,7 +169,7 @@ export class VideoService {
    */
   async togglePublishState(videoId) {
     try {
-      const response = await axios.patch(`/videos/toggle-publish/${videoId}`);
+      const response = await api.patch(`/videos/toggle-publish/${videoId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -180,7 +190,7 @@ export class VideoService {
    */
   async incrementViewsCount(videoId) {
     try {
-      const response = await axios.patch(`/videos/${videoId}/views`);
+      const response = await api.patch(`/videos/${videoId}/views`);
       return response.data;
     } catch (error) {
       console.error(

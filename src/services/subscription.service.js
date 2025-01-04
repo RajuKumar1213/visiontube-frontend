@@ -56,6 +56,20 @@ class SubscriptionService {
       throw error.response?.data || error.message;
     }
   }
+  async getChannelIsSubscribed(channelId) {
+    try {
+      const response = await api.get(
+        `/subscriptions/channel-is-subscribed/${channelId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "ERROR :: get subscribed channels:: ",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
+    }
+  }
 }
 
 const subscriptionService = new SubscriptionService();

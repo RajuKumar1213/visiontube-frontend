@@ -13,7 +13,6 @@ const Modal = ({ oldImageUrl, onClose }) => {
       authService.updateCoverImage(file).then((res) => {
         if (res.statusCode === 200) {
           window.location.reload();
-          file = null;
         }
       });
     }
@@ -26,11 +25,11 @@ const Modal = ({ oldImageUrl, onClose }) => {
   };
 
   return (
-    <div className="fixed rounded-lg inset-0 bg-black bg-opacity-50 flex">
+    <div className="fixed  rounded-lg inset-0 bg-black bg-opacity-50 flex">
       {/* Blurred out background */}
 
       {/* Modal on the right */}
-      <div className="ml-auto rounded-lg top-16 right-8 bg-secondary w-1/4 h-full mb-6 shadow-lg p-5 relative">
+      <div className="ml-auto rounded-lg top-16 right-8 bg-secondary w-1/4 h-3/4 mb-6 shadow-lg p-5 relative overflow-y-auto">
         <div
           className="rounded-full text-red-600 absolute top-2 right-2 cursor-pointer"
           onClick={onClose}

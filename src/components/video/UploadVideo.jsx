@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import spinner from "/spinner.svg";
 import { Button, Input } from "../../components";
 
-import videoService from "../../services/video.service";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import extractErrorMessage from "../../utils/extractErrorMessage";
+import api from "../../utils/api";
+import videoService from "../../services/video.service";
 
 const UploadVideo = () => {
   const {
@@ -17,7 +19,7 @@ const UploadVideo = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [videoFile, setVideoFile] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleDrop = (e) => {
@@ -34,9 +36,7 @@ const UploadVideo = () => {
     e.preventDefault();
   };
 
-  const handleUpload = (data) => {
-    console.log(data);
-
+  const handleUpload = async (data) => {
     setLoading(true);
     setError("");
     if (!data) {
@@ -45,20 +45,25 @@ const UploadVideo = () => {
     videoService
       .uploadVideo(data, setProgress)
       .then((response) => {
-        setError("");
-        navigate("/");
-        setLoading(false);
+        console.log(response);
+        if (response.statusCode === 200 || response.statusCode === 201) {
+          setError("");
+          navigate("/dashboard");
+          setLoading(false);
+        }
       })
       .catch((error) => {
-        setLoading(false);
-        setError(error.message);
+        setError(extractErrorMessage(error));
         console.log("Error uploading video:", error);
+        setLoading(false);
       });
   };
 
   return (
     <div className="min-h-screen text-white p-4">
       <h1 className="text-3xl font-bold mb-6">Upload Video</h1>
+
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <form onSubmit={handleSubmit(handleUpload)}>
         {/* Drag and Drop Section */}
@@ -87,6 +92,13 @@ const UploadVideo = () => {
                 Browse Files
               </label>
               <input
+                className="my-4 block  text-sm text-gray-500
+             file:mr-4 file:py-2 file:px-4
+             file:rounded-md file:border-0
+             file:text-sm file:font-semibold
+             file:bg-blue-50 file:text-blue-700
+             hover:file:bg-blue-100
+             cursor-pointer"
                 id="videoFileInput"
                 type="file"
                 // className="hidden"
@@ -150,14 +162,30 @@ const UploadVideo = () => {
         )}
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          className="flex justify-center items-center my-4 min-w-60 rounded-lg "
-        >
-          {loading && <img src={spinner} alt="" className="w-6 mr-3" />}
-          {/* {isUploading ? `Uploading... ${progress}%` : "Upload"} */}
-          Upload
-        </Button>
+
+        <div className="flex gap-8 mt-4">
+          <Button
+            type="submit"
+            className="flex justify-center items-center my-4 min-w-60 rounded-lg "
+          >
+            {loading && <img src={spinner} alt="" className="w-6 mr-3" />}
+            {/* {isUploading ? `Uploading... ${progress}%` : "Upload"} */}
+            Upload
+          </Button>
+
+          {progress && (
+            <div className="w-full max-w-lg flex flex-col justify-center items-start ">
+              <div
+                className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                style={{ width: `${progress}%` }}
+              >
+                {" "}
+                {progress}%
+              </div>
+              <p className="text-gray-400 text-sm mt-2">Uploading...</p>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

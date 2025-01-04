@@ -20,7 +20,7 @@ function FixedSidebar() {
     {
       name: "History",
       icon: <HistoryOutlinedIcon />,
-      url: userStatus ? "/history" : "/feed/history",
+      url: userStatus ? "/watch-history" : "/feed/history",
     },
     {
       name: "You",

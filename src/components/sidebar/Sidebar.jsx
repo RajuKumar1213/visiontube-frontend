@@ -11,7 +11,6 @@ import Users from "../Users";
 const Sidebar = () => {
   const dispatch = useDispatch();
   const sidebarTState = useSelector((state) => state.toggleSide.toggleState);
-  
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(sidebarTState);
 
@@ -24,7 +23,7 @@ const Sidebar = () => {
       {/* Overlay (Blur effect) */}
       {sidebarTState && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-10 transition-all duration-300"
+          className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-30 transition-all duration-300"
           onClick={toggleSidebar}
         ></div>
       )}
