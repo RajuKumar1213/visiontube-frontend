@@ -8,6 +8,7 @@ import { Outlet } from "react-router-dom";
 import spinner from "/spinner.svg";
 import LoadingBar from "react-top-loading-bar";
 import { setProgress } from "./redux/features/progressSlice.js";
+import Alert from "./components/Alert.jsx";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -43,6 +44,7 @@ function App() {
         onLoaderFinished={() => dispatch(setProgress(0))}
       />
       <Header />
+      <Alert />
       <FixedSidebar />
       <Sidebar />
       <Container>

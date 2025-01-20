@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 
 export class LikeService {
   // LIKE A VIDEO
@@ -11,7 +11,7 @@ export class LikeService {
 
   async likeVideo(videoId) {
     try {
-      const response = await axios.post(`/likes/like-video/${videoId}`);
+      const response = await api.patch(`/likes/like-video/${videoId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -31,7 +31,7 @@ export class LikeService {
    * */
   async likeComment(commentId) {
     try {
-      const response = await axios.post(`/likes/like-comment/${commentId}`);
+      const response = await api.patch(`/likes/like-comment/${commentId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -51,7 +51,7 @@ export class LikeService {
    * */
   async likeTweet(tweetId) {
     try {
-      const response = await axios.post(`/likes/like-tweet/${tweetId}`);
+      const response = await api.patch(`/likes/like-tweet/${tweetId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -71,7 +71,7 @@ export class LikeService {
 
   async getAllLikedVideos() {
     try {
-      const response = await axios.get(`/likes/all-videos`);
+      const response = await api.get(`/likes/all-videos`);
       return response.data;
     } catch (error) {
       console.error(
@@ -81,8 +81,6 @@ export class LikeService {
       throw error.response?.data || error.message;
     }
   }
-
-  
 }
 
 const likeService = new LikeService();

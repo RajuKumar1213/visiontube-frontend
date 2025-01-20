@@ -3,9 +3,16 @@ import { Avatar } from "@mui/material";
 import { format } from "timeago.js";
 import authService from "../../services/auth.service";
 import videoService from "../../services/video.service";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const VideoCard = ({ props, className = "", flexcol = "", hidden = "" }) => {
+const VideoCard = ({
+  props,
+  className = "",
+  flexcol = "",
+  hidden = "",
+  padding = 2,
+}) => {
   const navigate = useNavigate();
   const handleMakeVideoWatchAndHistory = () => {
     authService
@@ -24,16 +31,14 @@ const VideoCard = ({ props, className = "", flexcol = "", hidden = "" }) => {
 
   return (
     <div
-      className={`${flexcol} cursor-pointer p-2 md:min-w-[300px] w-full max-w-xl shadow-lg hover:shadow-xl transition duration-300 rounded-lg transform hover:scale-[1.02]`}
+      className={`${flexcol} p-${padding} cursor-pointer md:min-w-[300px] w-full max-w-xl shadow-lg hover:shadow-xl transition duration-300 rounded-lg transform hover:scale-[1.02]`}
     >
-      {/* Thumbnail */}
-      {/* <Link to={`/watch/${props?._id}`}> */}
       <div className="relative rounded-xl">
         <img
           onClick={handleMakeVideoWatchAndHistory}
           src={props?.thumbnail} // Replace with dynamic thumbnail URL
           alt="Video Thumbnail"
-          className={` ${className} object-cover rounded-2xl`}
+          className={` ${className} object-cover rounded-lg`}
         />
         {/* Video Duration */}
         <div className="absolute bottom-2 right-2 bg-black bg-opacity-55 text-white text-sm px-2.5 py-0.5 rounded-md">
@@ -43,28 +48,36 @@ const VideoCard = ({ props, className = "", flexcol = "", hidden = "" }) => {
       {/* </Link> */}
 
       {/* Video Info */}
-      <div className="flex p-1 space-x-3 ">
+      <div className="flex space-x-3 mt-2 ">
         {/* Channel Avatar */}
-        <div className={`${hidden}`}>
-          <Avatar
-            alt="Channel Name"
-            src={props?.owner[0]?.avatar} // Replace with dynamic channel avatar URL
-            className={` h-10 w-10 `}
-          />
-        </div>
+        <Link to={`profile/${props?.owner[0]?.username}`}>
+          <div className={`${hidden}`}>
+            <Avatar
+              alt="Channel Name"
+              src={props?.owner[0]?.avatar} // Replace with dynamic channel avatar URL
+              className={` h-10 w-10 `}
+            />
+          </div>
+        </Link>
         <div>
           {/* Video Title */}
           <h3 className="text-md font-semibold text-gray-300 line-clamp-2">
-            {props?.title.substring(0, 50)}
+            {props?.title.substring(0, 50)}{" "}
           </h3>
 
           {/* Channel Name */}
-          <p className="text-sm text-gray-500 mt-1">
-            {props?.owner[0]?.fullName}
+          <p className="text-sm text-gray-500 ">
+            <span className="flex items-center">
+              {props?.owner[0]?.fullName}
+              <CheckCircleIcon
+                className="text-gray-500 ml-1"
+                style={{ fontSize: "15px" }}
+              />
+            </span>
           </p>
 
           {/* Views and Upload Time */}
-          <div className="flex items-center text-sm text-gray-500 mt-1">
+          <div className="flex items-center text-sm text-gray-500 ">
             <p>{props?.views} views</p>
             <span className="mx-1">•</span>
             <p>{format(props?.createdAt)}</p>

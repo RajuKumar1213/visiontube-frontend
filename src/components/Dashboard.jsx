@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 
 import Modal from "./Modal";
 import MyRecentVideos from "./MyRecentVideos";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
@@ -85,7 +87,7 @@ const Dashboard = () => {
       )}
 
       <div className="relative flex items-center flex-col justify-center gap-4">
-        <div className="relative -top-16 group w-36 h-36 -mb-14">
+        <div className="relative -top-16 group w-36 h-36 -mb-16">
           <img
             src={channelStatus?.avatar || "https://via.placeholder.com/150"}
             alt="User Avatar"
@@ -101,6 +103,10 @@ const Dashboard = () => {
           <h2 className="text-gray-400">{channelStatus?.username}</h2>
           <p className="text-sm text-gray-300"> {channelStatus?.email}</p>
         </div>
+
+        <Link to={`/profile/${userData?.username}`}>
+          <Button>Visit your channel</Button>
+        </Link>
       </div>
 
       <div className="mt-8 bg-secondary p-4 rounded-lg">
@@ -141,7 +147,7 @@ const Dashboard = () => {
         <h2 className="text-2xl font-bold mt-6">Recently Uploaded Videos</h2>
         <div className="mt-4 w-full gap-6 ">
           {recentUploaedVideos?.length === 0 && (
-            <p>
+            <p className="text-2xl text-gray-500 font-thin">
               No videos uploaded yet. Click on ceate button to upload a video
             </p>
           )}
@@ -156,18 +162,18 @@ const Dashboard = () => {
       {/* Recent Subscribers Section */}
       <div className="mt-8 ">
         <h2 className="text-2xl font-bold mt-6">Recent Subscribers</h2>
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-          {recentSubscribers?.length === 0 ? (
-            <p className="text-gray-400 text text-center">
-              No recent subscribers yet.
-            </p>
-          ) : (
-            recentSubscribers?.length > 0 &&
-            recentSubscribers?.map((subscriber) => (
+
+        {recentSubscribers?.length === 0 ? (
+          <p className="text-2xl text-gray-500 font-thin">
+            No recent subscribers yet.
+          </p>
+        ) : (
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 ">
+            {recentSubscribers?.map((subscriber) => (
               <RecentSubscribers key={subscriber._id} props={subscriber} />
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

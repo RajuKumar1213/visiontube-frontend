@@ -12,7 +12,7 @@ function Button({
   return (
     <button
       type={type}
-      className={`${className} ring-1 ring-slate-700  px-${px} py-${py} hover:${hover} transition duration-200 rounded-full`}
+      className={`${className} flex items-center justify-center  ring-1 ring-slate-700  px-${px} py-${py} hover:${hover} transition duration-200 rounded-full`}
       {...props}
     >
       {children}

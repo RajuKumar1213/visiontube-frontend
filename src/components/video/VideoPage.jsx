@@ -4,7 +4,7 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import SortIcon from "@mui/icons-material/Sort";
 import ShareIcon from "@mui/icons-material/Share";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import videoService from "../../services/video.service";
 import { format } from "timeago.js";
 import subscriptionService from "../../services/subscription.service";
@@ -12,11 +12,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProgress } from "../../redux/features/progressSlice";
 import { useForm } from "react-hook-form";
 import commentService from "../../services/comment.service";
+import likeService from "../../services/like.service";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
-import EmojiPicker from "emoji-picker-react";
+import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
+import CancelScheduleSendOutlinedIcon from "@mui/icons-material/CancelScheduleSendOutlined";
+import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
+import spinner from "/spinner.svg";
+import { showTimedAlert } from "../../redux/features/alertSlice";
+import extractErrorMessage from "../../utils/extractErrorMessage";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 const VideoPage = () => {
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [content, setContent] = useState("");
   const [commentId, setCommentId] = useState("");
 
@@ -28,6 +35,10 @@ const VideoPage = () => {
   const [isSubscribed, setIsSubscribed] = useState(null);
   const userData = useSelector((state) => state.auth.userData);
   const [comments, setComment] = useState(null);
+  const [commentChange, setCommentChange] = useState(false);
+  const [subscriberChange, setSubscriberChange] = useState(false);
+  const [likeChange, setLikeChange] = useState(false);
+  const [likeCommentChange, setLikeCommentChange] = useState(false);
 
   const onEmojiClick = (event, emojiObject) => {
     setContent((prevContent) => prevContent + emojiObject.emoji);
@@ -44,7 +55,7 @@ const VideoPage = () => {
     videoService.getVideoById(videoId, dispatch).then((response) => {
       setVideo(response.data);
     });
-  }, [videoService]);
+  }, [videoService, dispatch, subscriberChange, likeChange]);
 
   useEffect(() => {
     // getching all commments
@@ -55,7 +66,7 @@ const VideoPage = () => {
         }
       });
     }
-  }, [video, commentService]);
+  }, [video, commentService, commentChange, likeCommentChange]);
 
   useEffect(() => {
     if (video) {
@@ -67,23 +78,54 @@ const VideoPage = () => {
           }
         });
     }
-  }, [video, subscriptionService]);
+  }, [subscriberChange, video]);
+
+  // like a video
+  const handleLikeVideo = () => {
+    if (video) {
+      likeService.likeVideo(video._id).then((response) => {
+        if (response.statusCode === 200) {
+          setLikeChange(!likeChange);
+        }
+      });
+    }
+  };
+
+  // like a comment.
 
   const toggleSubscribe = () => {
     subscriptionService.toggleSubscribe(video?.owner?._id).then((response) => {
       if (response.statusCode === 200) {
         setIsSubscribed(!isSubscribed);
+        setSubscriberChange(!subscriberChange);
       }
     });
   };
 
   const handleComment = (data) => {
-    commentService.createComment(video?._id, data).then((response) => {
-      if (response.statusCode === 201) {
-        setComment(response.data);
-        reset();
-      }
-    });
+    commentService
+      .createComment(video?._id, data)
+      .then((response) => {
+        if (response.statusCode === 201) {
+          dispatch(
+            showTimedAlert({
+              message: "Comment added successfully",
+              type: "success",
+            })
+          );
+          setCommentChange(!commentChange);
+          reset();
+        }
+      })
+      .catch((error) => {
+        dispatch(
+          showTimedAlert({
+            message: extractErrorMessage(error),
+            type: "error",
+            duration: 5000,
+          })
+        );
+      });
   };
 
   setValue("content", content);
@@ -94,49 +136,68 @@ const VideoPage = () => {
       .updateComment(commentId, { content: newContent, videoId: video?._id })
       .then((response) => {
         if (response.statusCode === 200) {
+          dispatch(
+            showTimedAlert({
+              message: "Comment updated successfully",
+              type: "success",
+            })
+          );
           setContent("");
-          setComment(response.data);
+          setCommentChange(!commentChange);
         }
+      })
+      .catch((error) => {
+        dispatch(
+          showTimedAlert({
+            message: extractErrorMessage(error),
+            type: "error",
+            duration: 5000,
+          })
+        );
       });
   };
 
   return (
-    <div className=" min-h-screen md:p-4 ">
+    <div className=" min-h-screen md:p-4 mt-4">
       {/* Video Section */}
       <div className="mx-auto md:rounded-lg shadow-md overflow-hidden">
         {/* Video Player */}
-        <div className="w-full z-30 h-fit mr-4 sm:h-96 bg-black fixed md:relative">
+        <div className="w-full z-[19] aspect-video mr-4 sm:h-96 bg-black fixed md:relative">
           <video
             src={video?.videoFile}
             controls
             autoPlay
-            className="w-full h-full md:rounded-lg"
+            className="w-full h-full md:rounded-lg "
           ></video>
         </div>
         {/* Video Info Section */}
-        <div className="p-4 mt-56 md:mt-0">
-          <h1 className="text-xl font-semibold mb-2">{video?.title}</h1>
+        <div className="p-4 mt-48 md:mt-0">
+          <h1 className="text-xl font-semibold ">{video?.title}</h1>
           <p className="text-gray-500 text-sm mb-4">
             {video?.views} views • <span>{format(video?.createdAt)}</span>
           </p>
 
           <div className="flex items-center justify-between flex-wrap md:flex-nowrap">
             {/* Left: Channel Info */}
-            <div className="flex items-center space-x-4">
-              <img
-                src={video?.owner?.avatar}
-                alt="Avatar"
-                className="w-12 h-12 rounded-full object-cover"
-              />
-              <div>
-                <h3 className="text-lg font-medium line-clamp-1 ">
-                  {video?.owner?.fullName}
-                </h3>
-                <p className="text-sm text-gray-500">
-                  {video?.owner?.subscriberCount} Subscribers
-                </p>
+            <div className="flex items-center space-x-4 justify-between md:justify-normal">
+              <div className="flex items-center space-x-2 ">
+                <Link to={`/profile/${video?.owner?.username}`}>
+                  <img
+                    src={video?.owner?.avatar}
+                    alt="Avatar"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                </Link>
+                <div>
+                  <h3 className="text-lg font-medium line-clamp-1 ">
+                    {video?.owner?.fullName}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {video?.owner?.subscriberCount} Subscribers
+                  </p>
+                </div>
               </div>
-              {console.log(isSubscribed)}
+
               <Button
                 hover={`${isSubscribed ? "bg-gray-700" : "bg-red-700"}`}
                 onClick={toggleSubscribe}
@@ -151,10 +212,14 @@ const VideoPage = () => {
             </div>
 
             {/* Right: Interaction Buttons */}
-            <div className="flex items-center rounded-r-none ml-6">
-              <Button className="flex items-center rounded-r-lg m-0" py={1}>
-                <ThumbUpAltOutlinedIcon />
-                <span className="ml-1">1.2k</span>
+            <div className="flex md:items-center items-start my-4 rounded-r-none md:ml-6 ">
+              <Button
+                onClick={handleLikeVideo}
+                className="flex items-center rounded-r-lg m-0"
+                py={1}
+              >
+                {!likeChange ? <ThumbUpIcon /> : <ThumbUpAltOutlinedIcon />}
+                <span className="ml-1">{video?.totalLikes}</span>
               </Button>
               <Button className="flex items-center rounded-l-lg m-0" py={1}>
                 <ThumbDownAltOutlinedIcon />
@@ -187,7 +252,7 @@ const VideoPage = () => {
             <img
               src={userData?.avatar}
               alt="User Avatar"
-              className="w-10 h-10 rounded-full  "
+              className="w-10 h-10 rounded-full object-cover"
             />
             <form
               className="w-full  gap-x-2"
@@ -196,12 +261,12 @@ const VideoPage = () => {
               <textarea
                 type="text"
                 placeholder="Add a comment..."
-                className="w-full bg-none border-b bg-transparent outline-none  relative bottom-3 text-gray-100"
+                className=" w-full bg-none border-b bg-transparent outline-none  relative bottom-3 text-gray-100"
                 {...register("content", { required: true })}
               ></textarea>
               <div className="flex justify-between gap-x-2">
-                <EmojiEmotionsOutlinedIcon />
-                <div>
+                <EmojiEmotionsOutlinedIcon style={{ color: "gold" }} />
+                <div className="flex items-center">
                   <Button
                     onClick={() => {
                       reset();
@@ -210,15 +275,30 @@ const VideoPage = () => {
                     className="mr-2"
                     py={1}
                   >
-                    Cancel
+                    <span className="flex items-center text-sm gap-x-2">
+                      <CancelScheduleSendOutlinedIcon
+                        style={{ color: "red", height: "20px" }}
+                      />
+                      Cancel
+                    </span>{" "}
                   </Button>
                   {content ? (
                     <Button py={1} onClick={handleEditComment}>
-                      Update
+                      <span className="flex items-center text-sm gap-x-2">
+                        <BrowserUpdatedIcon
+                          style={{ color: "green", height: "20px" }}
+                        />
+                        Update
+                      </span>{" "}
                     </Button>
                   ) : (
                     <Button py={1} type="submit">
-                      Comment
+                      <span className="flex items-center text-sm gap-x-2">
+                        <AddCommentOutlinedIcon
+                          style={{ color: "green", height: "20px" }}
+                        />
+                        Comment
+                      </span>{" "}
                     </Button>
                   )}
                 </div>
@@ -242,6 +322,7 @@ const VideoPage = () => {
                 No any comments yet, be the first one to comment.
               </h1>
             )}
+
             {comments &&
               comments?.map((comment) => (
                 <Comment
@@ -252,6 +333,8 @@ const VideoPage = () => {
                   setComment={setComment}
                   setContent={setContent}
                   setCommentId={setCommentId}
+                  setLikeCommentChange={setLikeCommentChange}
+                  likeCommentChange={likeCommentChange}
                 />
               ))}
           </div>

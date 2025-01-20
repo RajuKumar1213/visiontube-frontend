@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { VideoCard } from "../components";
 import videoService from "../services/video.service";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setProgress } from "../redux/features/progressSlice";
 
 function HomePage() {
   const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
+
+  const searchQuery = useSelector((state) => state.search.searchQuery);
+
+  const filteredVideos = videos.filter((video) =>
+    video.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     dispatch(setProgress(30));
@@ -34,10 +41,20 @@ function HomePage() {
           {error} . Server is not running.
         </h1>
       )}
-      <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2 gap-3 grid-cols-1">
-        {videos?.map((video) => (
-          <VideoCard key={video._id} props={video} className="h-52 - w-full" />
-        ))}
+      <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2 gap-2 grid-cols-1">
+        {filteredVideos.length === 0 ? (
+          <h1 className="text-center text-2xl font-thin text-gray-500">
+            {/* No videos found for "{searchQuery}" */}
+          </h1>
+        ) : (
+          filteredVideos?.map((video) => (
+            <VideoCard
+              key={video._id}
+              props={video}
+              className="h-52 - w-full "
+            />
+          ))
+        )}
       </div>
     </>
   );

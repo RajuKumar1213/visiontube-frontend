@@ -227,9 +227,7 @@ export class AuthService {
    */
   async getChannelProfile(usernameOrId) {
     try {
-      const response = await axios.get(`v1/users/channel/${usernameOrId}`);
-
-      console.log(response.data);
+      const response = await api.get(`/users/channel/${usernameOrId}`);
       return response.data;
     } catch (error) {
       console.error(

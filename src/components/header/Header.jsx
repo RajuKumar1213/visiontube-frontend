@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { logout } from "../../redux/features/authSlice";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
+import { showTimedAlert } from "../../redux/features/alertSlice";
+import { setSearchQuery } from "../../redux/features/searchSlice";
 
 const Header = () => {
   const userStatus = useSelector((state) => state.auth.status);
@@ -24,10 +26,13 @@ const Header = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     dispatch(logout());
+    dispatch(
+      showTimedAlert({ message: "Logout successfully", type: "success" })
+    );
     setIsDropdownOpen(false);
   };
   return (
-    <div className="realative bg-secondary fixed top-0 w-full z-50 ">
+    <div className="realative  bg-secondary fixed top-0 w-full z-20 ">
       {/* <Container > */}
       <header className=" text-white px-4 py-2 flex items-center justify-between shadow-md ">
         {/* Logo Section */}
@@ -56,6 +61,7 @@ const Header = () => {
         <div className="flex-grow mx-4 max-w-2xl ">
           <div className=" flex items-center">
             <input
+              onChange={(e) => dispatch(setSearchQuery(e.target.value))}
               type="text"
               placeholder="Search"
               className="h-10 w-full py-2 px-8 rounded-l-full bg-secondary ring-1 ring-slate-700 placeholder-gray-500 shadow focus:outline-none focus:ring-1 focus:ring-blue-600 text-white"

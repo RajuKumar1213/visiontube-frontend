@@ -52,7 +52,6 @@ export class CommentService {
    * @throws Will throw an error if the updating comment by ID fails.
    */
   async updateComment(commentId, content) {
-    console.log(commentId, content);
     try {
       const response = await api.put(
         `/comments/update-comment/${commentId}`,

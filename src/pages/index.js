@@ -7,6 +7,9 @@ import VideoWatchPage from "./VideoWatchPage";
 import UploadVideoPage from "./videos/UploadVideoPage";
 import DashboardPage from "./users/DashboardPage";
 import WatchHistoryPage from "./WatchHistoryPage";
+import UserProfilePage from "./UserProfilePage";
+import ViewPlaylistPage from "./ViewPlaylistPage";
+import CreatePlaylist from "./CreatePlaylist";
 
 export {
   WatchHistoryPage,
@@ -18,4 +21,7 @@ export {
   NotUserThenYouPage,
   NotUserHistoryPage,
   DashboardPage,
+  UserProfilePage,
+  ViewPlaylistPage,
+  CreatePlaylist,
 };

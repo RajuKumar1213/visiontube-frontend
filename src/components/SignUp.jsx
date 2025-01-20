@@ -6,8 +6,12 @@ import { useForm } from "react-hook-form";
 import authService from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import spinner from "/spinner.svg";
+import extractErrorMessage from "../utils/extractErrorMessage";
+import { showTimedAlert } from "../redux/features/alertSlice";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,15 +33,27 @@ const SignUp = () => {
       .createUser(data)
       .then((response) => {
         if (response.statusCode == 200) {
+          dispatch(
+            showTimedAlert({
+              message: "Signup successfully, please login to continue",
+              type: "success",
+             })
+          );
           navigate("/login");
         }
         setLoading(false);
         setError("");
       })
       .catch((error) => {
-        setError(error);
+        dispatch(
+          showTimedAlert({
+            message: extractErrorMessage(error),
+            type: "error",
+            duration: 5000,
+          })
+        );
+        setError(extractErrorMessage(error));
         setLoading(false);
-        console.log("Error logging in:", error);
       });
 
     // Your signup logic here

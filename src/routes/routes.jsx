@@ -7,13 +7,16 @@ import {
 } from "../components";
 
 import {
+  CreatePlaylist,
   DashboardPage,
   HomePage,
   LoginPage,
   NotUserThenYouPage,
   SignupPage,
   UploadVideoPage,
+  UserProfilePage,
   VideoWatchPage,
+  ViewPlaylistPage,
   WatchHistoryPage,
 } from "../pages";
 import NotUserSubscriptionPage from "../pages/not-login-pages/NotUserSubscriptionPage";
@@ -114,6 +117,30 @@ export const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={true}>
             <VideoEditPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/profile/:userId",
+        element: (
+          <AuthLayout authentication={true}>
+            <UserProfilePage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/playlist/:playlistId",
+        element: (
+          <AuthLayout authentication={true}>
+            <ViewPlaylistPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/playlist/:playlistId/create",
+        element: (
+          <AuthLayout authentication={true}>
+            <CreatePlaylist />
           </AuthLayout>
         ),
       },

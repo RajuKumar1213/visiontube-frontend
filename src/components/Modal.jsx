@@ -15,6 +15,8 @@ const Modal = ({ oldImageUrl, onClose }) => {
           window.location.reload();
         }
       });
+    } else {
+      setNewImagePreview(null);
     }
   };
 
@@ -52,9 +54,9 @@ const Modal = ({ oldImageUrl, onClose }) => {
         </div>
         <div>
           <input
+            onChange={handleFileChange}
             type="file"
             accept="image/*"
-            onChange={handleFileChange}
             className="mb-4 block w-full text-sm text-gray-500
              file:mr-4 file:py-2 file:px-4
              file:rounded-md file:border-0

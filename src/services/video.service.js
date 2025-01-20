@@ -200,6 +200,21 @@ export class VideoService {
       throw error.response?.data || error.message;
     }
   }
+
+  async getAllVideosOfChannel(channelId, queries) {
+    try {
+      const response = await api.get(`/videos/my-videos/${channelId}`, {
+        params: queries,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "ERROR :: getting all videos of channel:: ",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
+    }
+  }
 }
 
 const videoService = new VideoService();

@@ -5,6 +5,10 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import commentService from "../services/comment.service";
+import likeService from "../services/like.service";
+import { useDispatch } from "react-redux";
+import { showTimedAlert } from "../redux/features/alertSlice";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 function Comment({
   props,
@@ -13,7 +17,10 @@ function Comment({
   setComment,
   setCommentId,
   setContent,
+  setLikeCommentChange,
+  likeCommentChange,
 }) {
+  const dispatch = useDispatch();
   const [activeCommentId, setActiveCommentId] = useState(null);
 
   // Function to toggle menu visibility
@@ -34,6 +41,16 @@ function Comment({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  const handleCommentLike = () => {
+    if (props) {
+      likeService.likeComment(props._id).then((response) => {
+        if (response.statusCode === 200) {
+          setLikeCommentChange(!likeCommentChange);
+        }
+      });
+    }
+  };
 
   return (
     <div
@@ -59,26 +76,32 @@ function Comment({
                     props?.owner?.avatar || "https://via.placeholder.com/150"
                   }
                   alt="User Avatar"
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="w-full min-w-72">
                   <h4 className="text-sm text-gray-500">
                     {props?.owner?.username}
                   </h4>
                   <p className="text-gray-200  ">{props?.content}</p>
-                  <span className="items-center space-x-2 mr-4 text-xs">
-                    <ThumbUpAltOutlinedIcon style={{ fontSize: "20px" }} /> 220
-                  </span>
-                  <span className="text-xs">
-                    <ThumbDownAltOutlinedIcon style={{ fontSize: "20px" }} />
-                  </span>
+                  <div className="flex mt-2">
+                    <span
+                      onClick={handleCommentLike}
+                      className=" flex items-center space-x-2 mr-4 text-xs cursor-pointer"
+                    >
+                      <ThumbUpAltOutlinedIcon style={{ fontSize: "20px" }} />
+                      <span> {props?.totalCommentLikes}</span>
+                    </span>
+                    <span className="text-xs cursor-pointer">
+                      <ThumbDownAltOutlinedIcon style={{ fontSize: "20px" }} />
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         {userData?._id === props.owner?._id && (
-          <div className="text-xs text-gray-400 z-40">
+          <div className="text-xs text-gray-400 ">
             <MoreVertOutlinedIcon
               className="cursor-pointer"
               onClick={(e) => {
@@ -107,6 +130,12 @@ function Comment({
                 onClick={() => {
                   commentService.deleteComment(props?._id).then((res) => {
                     if (res.statusCode === 200) {
+                      dispatch(
+                        showTimedAlert({
+                          message: "Comment deleted successfully",
+                          type: "success",
+                        })
+                      );
                       setComment((prev) =>
                         prev.filter((comment) => comment._id !== props?._id)
                       );

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import videoService from "../../services/video.service";
+import { showTimedAlert } from "../../redux/features/alertSlice";
+import { useDispatch } from "react-redux";
 
 const VideoEditPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -25,8 +28,6 @@ const VideoEditPage = () => {
       }
     });
   }, [videoId]);
-
-  console.log(video);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -51,6 +52,12 @@ const VideoEditPage = () => {
     videoService.updateVideo(videoId, videoData).then((res) => {
       if (res.statusCode === 200) {
         navigate("/dashboard");
+        dispatch(
+          showTimedAlert({
+            message: "Video updated successfully",
+            type: "success",
+          })
+        );
       }
     });
   };
@@ -64,6 +71,12 @@ const VideoEditPage = () => {
     videoService.deleteVideo(videoId).then((res) => {
       if (res.statusCode === 200) {
         navigate("/dashboard");
+        dispatch(
+          showTimedAlert({
+            message: "Video deleted successfully",
+            type: "success",
+          })
+        );
       }
     });
   };

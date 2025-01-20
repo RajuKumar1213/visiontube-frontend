@@ -5,10 +5,13 @@ import { Button, Input } from "../../components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import extractErrorMessage from "../../utils/extractErrorMessage";
-import api from "../../utils/api";
 import videoService from "../../services/video.service";
+import { useDispatch } from "react-redux";
+import { showTimedAlert } from "../../redux/features/alertSlice";
 
 const UploadVideo = () => {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -47,12 +50,25 @@ const UploadVideo = () => {
       .then((response) => {
         console.log(response);
         if (response.statusCode === 200 || response.statusCode === 201) {
+          dispatch(
+            showTimedAlert({
+              message: "Video uploaded successfully",
+              type: "success",
+            })
+          );
           setError("");
           navigate("/dashboard");
           setLoading(false);
         }
       })
       .catch((error) => {
+        dispatch(
+          showTimedAlert({
+            message: extractErrorMessage(error),
+            type: "error",
+            duration: 7000,
+          })
+        );
         setError(extractErrorMessage(error));
         console.log("Error uploading video:", error);
         setLoading(false);

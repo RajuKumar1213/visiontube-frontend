@@ -12,20 +12,11 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const sidebarTState = useSelector((state) => state.toggleSide.toggleState);
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(sidebarTState);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
     <div className={`relative`}>
       {/* Overlay (Blur effect) */}
       {sidebarTState && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-30 transition-all duration-300"
-          onClick={toggleSidebar}
-        ></div>
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-35 transition-all duration-300"></div>
       )}
 
       {/* Sidebar */}

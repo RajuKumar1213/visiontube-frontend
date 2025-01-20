@@ -1,23 +1,31 @@
 // PlaylistComponent.jsx
 import React from "react";
 import PlaylistPlayOutlinedIcon from "@mui/icons-material/PlaylistPlayOutlined";
+import { Link } from "react-router-dom";
 
-const Playlist = () => {
+const Playlist = ({ playlist }) => {
   return (
-    <div className="relative flex flex-col w-64 m-4">
-      <img
-        src="https://cdn.pixabay.com/photo/2020/06/03/15/11/tree-5255288_1280.jpg"
-        alt="Playlist Cover"
-        className="w-full h-40 rounded-lg mr-4 object-cover"
-      />
+    <div className="relative flex  flex-col ">
+      <div className="aspect-w-16 aspect-h-9">
+        <img
+          src={
+            playlist?.videoDetails?.thumbnail ||
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s"
+          }
+          alt="Playlist Cover"
+          className="w-full h-44 rounded-lg object-cover"
+        />
+      </div>
       <p className="bg-secondary px-2 rounded-md bg-opacity-75 text-xs  absolute bottom-14 right-2 ">
         {" "}
         <PlaylistPlayOutlinedIcon />
-        <span>12 vidoes</span>
+        <span>{playlist?.totalVideos} vidoes</span>
       </p>
       <div>
-        <h3 className="text-md font-medium">Playlist Name</h3>
-        <button className="text-slate-400">View full playlist</button>
+        <h3 className="text-md font-medium line-clamp-1">{playlist?.name}</h3>
+        <Link to={`/playlist/${playlist?._id}`}>
+          <button className="text-slate-400">View full playlist</button>
+        </Link>
       </div>
     </div>
   );

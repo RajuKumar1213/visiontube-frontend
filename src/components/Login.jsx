@@ -8,6 +8,7 @@ import authService from "../services/auth.service";
 import { login } from "../redux/features/authSlice";
 import spinner from "/spinner.svg";
 import extractErrorMessage from "../utils/extractErrorMessage";
+import { showTimedAlert } from "../redux/features/alertSlice";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -70,17 +71,20 @@ const Login = () => {
           document.cookie = `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; path=/;`;
 
           dispatch(login(user));
+          dispatch(
+            showTimedAlert({ message: "Login successfully", type: "success" })
+          );
           navigate("/");
           setLoading(false);
         }
       })
       .catch((error) => {
+        dispatch(
+          showTimedAlert({ message: extractErrorMessage(error), type: "error" })
+        );
         setError(extractErrorMessage(error));
-
         // Extract the error message from the HTML string
-
         setLoading(false);
-        console.log("Error logging in:", error);
       });
   };
 

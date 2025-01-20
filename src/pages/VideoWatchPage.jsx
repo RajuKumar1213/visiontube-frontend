@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 function VideoWatchPage() {
   const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,8 +19,10 @@ function VideoWatchPage() {
         if (videos.length === 0) return;
         setVideos(videos.data);
       })
-
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        setError(err);
+        console.error(err);
+      });
   }, [videoService]);
 
   return (
