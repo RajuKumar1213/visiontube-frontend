@@ -9,7 +9,6 @@ import SignUp from "./SignUp";
 import Input from "./Input";
 import Users from "./Users";
 import HomePageInLogout from "./HomePageInLogout";
-import FixedSidebar from "./sidebar/fixedSidebar";
 import Dashboard from "./Dashboard";
 import Card from "./Card";
 import RecentSubscribers from "./RecentSubscribers";
@@ -22,6 +21,7 @@ import NotUserThenHistory from "./ifNotLoggedIn/NotUserThenHistory";
 import NotUserThenSubscription from "./ifNotLoggedIn/NotUserThenSubscription";
 import NotUserThenLikedVid from "./ifNotLoggedIn/NotUserThenLikedVid";
 import Login from "./Login";
+import FixedSidebar from "./sidebar/FixedSidebar";
 
 export {
   NotUserThenLikedVid,
