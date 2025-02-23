@@ -22,15 +22,11 @@ export class AuthService {
         }
       });
 
-      const response = await axios.post(
-        "https://vision-tube.netlify.app/api/v1/users/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await api.post("/users/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error) {
       console.error(
@@ -49,10 +45,7 @@ export class AuthService {
    */
   async loginUser(credentials) {
     try {
-      const response = await axios.post(
-        "https://vision-tube.netlify.app/api/v1/users/login",
-        credentials
-      );
+      const response = await api.post("/users/login", credentials);
       return response.data;
     } catch (error) {
       console.error(
