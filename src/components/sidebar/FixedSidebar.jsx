@@ -1,7 +1,6 @@
 import React from "react";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
-
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
@@ -52,7 +51,6 @@ function FixedSidebar() {
                   className="flex flex-col items-center justify-center hover:bg-slate-800 py-4 px-2 rounded-md"
                 >
                   <span className="mb-1"> {item.icon}</span>
-
                   <span className="text-center text-xs">{item.name}</span>
                 </li>
               </Link>
