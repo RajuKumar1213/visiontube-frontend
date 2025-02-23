@@ -41,8 +41,7 @@ coverage/
 *.temp
 
 # Tailwind CSS config
-tailwind.config.js
-tailwind.config.cjs
+
 
 # Parcel-bundler cache
 .cache/
