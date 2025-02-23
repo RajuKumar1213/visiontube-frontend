@@ -23,7 +23,7 @@ export class AuthService {
       });
 
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/register",
+        "https://vision-tube.netlify.app/api/v1/users/register",
         formData,
         {
           headers: {
@@ -50,7 +50,7 @@ export class AuthService {
   async loginUser(credentials) {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        "https://vision-tube.netlify.app/api/v1/users/login",
         credentials
       );
       return response.data;
@@ -90,7 +90,7 @@ export class AuthService {
    */
   async generateRefreshToken() {
     try {
-      const response = await axios.post("/users/refresh-token");
+      const response = await api.post("/users/refresh-token");
       return response.data;
     } catch (error) {
       console.error(
@@ -185,7 +185,7 @@ export class AuthService {
    */
   async updateAvatar(avatar) {
     try {
-      const response = await axios.patch("/users/update-avatar", avatar);
+      const response = await api.patch("/users/update-avatar", avatar);
       return response.data;
     } catch (error) {
       console.error(

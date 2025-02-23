@@ -44,7 +44,9 @@ api.interceptors.response.use(
         try {
           // Request to refresh the token
           const refreshResponse = await axios.post(
-            "http://localhost:8000/api/v1/users/refresh-token",
+            `${
+              import.meta.env.VITE_BACKEND_HOST_URL
+            }/api/v1/users/refresh-token`,
             { refreshToken },
             { withCredentials: true } // Ensure cookies are sent with the request
           );
