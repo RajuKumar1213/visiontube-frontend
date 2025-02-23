@@ -17,7 +17,6 @@ import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 import CancelScheduleSendOutlinedIcon from "@mui/icons-material/CancelScheduleSendOutlined";
 import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
-import spinner from "/spinner.svg";
 import { showTimedAlert } from "../../redux/features/alertSlice";
 import extractErrorMessage from "../../utils/extractErrorMessage";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -241,7 +240,7 @@ const VideoPage = () => {
         {/* Comments Section */}
         <div className="pt-6 px-4">
           <div className="flex items-center space-x-10 pb-4 mb-4">
-            <h3 className="text-xl font-semibold ">102 Comments</h3>
+            <h3 className="text-xl font-semibold ">{} Comments</h3>
             <Button>
               <SortIcon />
               Sort by

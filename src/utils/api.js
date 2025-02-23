@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL: "https://visiontube-backend-1.onrender.com/api/v1",
   withCredentials: true, // Ensure cookies are sent with requests
 });
 
@@ -25,8 +25,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response, // Return the response as is if no error
   async (error) => {
+    const originalRequest = error.config;
+
     // If the error status is 401, meaning the token is expired
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
       const refreshToken = document.cookie
         .split("; ")
         .find((row) => row.startsWith("refreshToken="))
@@ -43,18 +51,26 @@ api.interceptors.response.use(
 
           const newAccessToken = refreshResponse.data.accessToken;
 
-          // Store the new access token in cookies and localStorage
-          document.cookie = `accessToken=${newAccessToken}; path=/; secure;`;
+          // Store the new access token in localStorage
           localStorage.setItem("accessToken", newAccessToken);
 
-          // Update the failed request with the new access token
-          error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          // Update the Authorization header with the new access token
+          api.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${newAccessToken}`;
 
           // Retry the original request with the new access token
-          return axios.request(error.config);
+          return api(originalRequest);
         } catch (err) {
           console.error("Failed to refresh token:", err);
+          // Redirect to login or show an error message
+          window.location.href = "/login";
+          return Promise.reject(err);
         }
+      } else {
+        // No refresh token available, redirect to login
+        window.location.href = "/login";
+        return Promise.reject(error);
       }
     }
 

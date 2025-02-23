@@ -48,7 +48,6 @@ const UploadVideo = () => {
     videoService
       .uploadVideo(data, setProgress)
       .then((response) => {
-        console.log(response);
         if (response.statusCode === 200 || response.statusCode === 201) {
           dispatch(
             showTimedAlert({

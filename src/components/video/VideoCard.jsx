@@ -38,7 +38,7 @@ const VideoCard = ({
           onClick={handleMakeVideoWatchAndHistory}
           src={props?.thumbnail} // Replace with dynamic thumbnail URL
           alt="Video Thumbnail"
-          className={` ${className} object-cover rounded-lg`}
+          className={` ${className} object-cover rounded-lg w-full`}
         />
         {/* Video Duration */}
         <div className="absolute bottom-2 right-2 bg-black bg-opacity-55 text-white text-sm px-2.5 py-0.5 rounded-md">
