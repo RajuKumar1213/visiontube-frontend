@@ -10,6 +10,7 @@ import WatchHistoryPage from "./WatchHistoryPage";
 import UserProfilePage from "./UserProfilePage";
 import ViewPlaylistPage from "./ViewPlaylistPage";
 import CreatePlaylist from "./CreatePlaylist";
+import YouPage from "./users/You";
 
 export {
   WatchHistoryPage,
@@ -24,4 +25,5 @@ export {
   UserProfilePage,
   ViewPlaylistPage,
   CreatePlaylist,
+  YouPage,
 };

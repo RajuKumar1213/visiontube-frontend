@@ -18,6 +18,7 @@ import {
   VideoWatchPage,
   ViewPlaylistPage,
   WatchHistoryPage,
+  YouPage,
 } from "../pages";
 import NotUserSubscriptionPage from "../pages/not-login-pages/NotUserSubscriptionPage";
 import NotUserThenLikedVidPage from "../pages/not-login-pages/NotUserThenLikedVidPage";
@@ -57,6 +58,14 @@ export const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={false}>
             <NotUserThenYouPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/feed-you",
+        element: (
+          <AuthLayout authentication={true}>
+            <YouPage />
           </AuthLayout>
         ),
       },

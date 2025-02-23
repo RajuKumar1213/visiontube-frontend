@@ -25,7 +25,7 @@ function FixedSidebar() {
     {
       name: "You",
       icon: <AccountCircleOutlinedIcon />,
-      url: userStatus ? "/profile" : "/feed/you",
+      url: userStatus ? "/feed-you" : "/feed/you",
     },
     {
       name: "Subscriptions",
