@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: "https://visiontube-backend-1.onrender.com/api/v1",
+  baseURL: `${import.meta.env.VITE_BACKEND_HOST_URL}/api/v1`,
   withCredentials: true, // Ensure cookies are sent with requests
 });
 
