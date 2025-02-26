@@ -51,7 +51,7 @@ function HomePage() {
             <VideoCard
               key={video._id}
               props={video}
-              className="h-52 - w-full "
+              className="h-56 md:h-52 w-full"
             />
           ))
         )}

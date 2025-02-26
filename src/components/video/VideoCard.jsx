@@ -49,7 +49,7 @@ const VideoCard = ({
           onClick={handleMakeVideoWatchAndHistory}
           src={props?.thumbnail} // Replace with dynamic thumbnail URL
           alt="Video Thumbnail"
-          className={` ${className} object-cover min-h-56 rounded-lg w-full`}
+          className={` ${className} object-cover rounded-lg w-full`}
         />
         {/* Video Duration */}
         <div className="absolute bottom-2 right-2 bg-black bg-opacity-55 text-white text-sm px-2.5 py-0.5 rounded-md">
@@ -63,14 +63,14 @@ const VideoCard = ({
             <Avatar
               alt="Channel Name"
               src={props?.owner[0]?.avatar} // Replace with dynamic channel avatar URL
-              className={` h-10 w-10 `}
+              className={`h-10 w-10 `}
             />
           </div>
         </Link>
         <div>
           {/* Video Title */}
-          <h3 className="text-md font-semibold text-gray-300 line-clamp-2">
-            {props?.title.substring(0, 50)}{" "}
+          <h3 className="text-md font-semibold text-gray-300 line-clamp-2 md:line-clamp-1">
+            {props?.title}{" "}
           </h3>
 
           {/* Channel Name */}
@@ -78,6 +78,7 @@ const VideoCard = ({
           {/* Views and Upload Time */}
           <div className="flex items-center text-sm text-gray-500 ">
             {props?.owner[0]?.fullName}
+            <br />
             <div className="hidden md:block">
               <span className="flex items-center ">
                 <CheckCircleIcon
