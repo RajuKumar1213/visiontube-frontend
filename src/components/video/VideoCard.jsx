@@ -5,6 +5,7 @@ import authService from "../../services/auth.service";
 import videoService from "../../services/video.service";
 import { Link, useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useSelector } from "react-redux";
 
 const VideoCard = ({
   props,
@@ -13,25 +14,35 @@ const VideoCard = ({
   hidden = "",
   padding = 2,
 }) => {
+  const userStatus = useSelector((state) => state.auth.status);
+  console.log(userStatus);
+
   const navigate = useNavigate();
   const handleMakeVideoWatchAndHistory = () => {
-    authService
-      .addToWatchHistory(props?._id)
-      .then((res) => {
-        if (res.statusCode === 200) {
-          navigate(`/watch/${props?._id}`);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (userStatus) {
+      authService
+        .addToWatchHistory(props?._id)
+        .then((res) => {
+          if (res.statusCode === 200) {
+            navigate(`/watch/${props?._id}`);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      navigate(`/watch/${props?._id}`);
+    }
     // Increment views count
     videoService.incrementViewsCount(props?._id);
   };
 
+  const handleAlert = () => {};
+
   return (
     <div
       className={`${flexcol} p-${padding} cursor-pointer md:min-w-[300px] w-full max-w-xl shadow-lg hover:shadow-xl transition duration-300 rounded-lg transform hover:scale-[1.02]`}
+      onClick={handleAlert}
     >
       <div className="relative rounded-xl">
         <img
@@ -45,11 +56,8 @@ const VideoCard = ({
           {(props?.duration / 60).toFixed(2)}
         </div>
       </div>
-      {/* </Link> */}
 
-      {/* Video Info */}
       <div className="flex space-x-3 mt-2 ">
-        {/* Channel Avatar */}
         <Link to={`profile/${props?.owner[0]?.username}`}>
           <div className={`${hidden}`}>
             <Avatar

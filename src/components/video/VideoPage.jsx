@@ -33,6 +33,7 @@ const VideoPage = () => {
   const [video, setVideo] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(null);
   const userData = useSelector((state) => state.auth.userData);
+  const userStatus = useSelector((state) => state.auth.status);
   const [comments, setComment] = useState(null);
   const [commentChange, setCommentChange] = useState(false);
   const [subscriberChange, setSubscriberChange] = useState(false);
@@ -93,12 +94,23 @@ const VideoPage = () => {
   // like a comment.
 
   const toggleSubscribe = () => {
-    subscriptionService.toggleSubscribe(video?.owner?._id).then((response) => {
-      if (response.statusCode === 200) {
-        setIsSubscribed(!isSubscribed);
-        setSubscriberChange(!subscriberChange);
-      }
-    });
+    if (userData) {
+      subscriptionService
+        .toggleSubscribe(video?.owner?._id)
+        .then((response) => {
+          if (response.statusCode === 200) {
+            setIsSubscribed(!isSubscribed);
+            setSubscriberChange(!subscriberChange);
+          }
+        });
+    } else {
+      dispatch(
+        showTimedAlert({
+          message: "Please login to subscribe",
+          duration: 3000,
+        })
+      );
+    }
   };
 
   const handleComment = (data) => {
@@ -161,7 +173,7 @@ const VideoPage = () => {
       {/* Video Section */}
       <div className="mx-auto md:rounded-lg shadow-md overflow-hidden">
         {/* Video Player */}
-        <div className="w-full z-[19] aspect-video mr-4 sm:h-96 bg-black fixed md:relative">
+        <div className="w-full z-[19] aspect-video mr-4 h-fit bg-black fixed md:relative">
           <video
             src={video?.videoFile}
             controls
@@ -170,7 +182,7 @@ const VideoPage = () => {
           ></video>
         </div>
         {/* Video Info Section */}
-        <div className="p-4 mt-48 md:mt-0">
+        <div className="p-4 mt-56 md:mt-0">
           <h1 className="text-xl font-semibold ">{video?.title}</h1>
           <p className="text-gray-500 text-sm mb-4">
             {video?.views} views • <span>{format(video?.createdAt)}</span>
@@ -178,7 +190,7 @@ const VideoPage = () => {
 
           <div className="flex items-center justify-between flex-wrap md:flex-nowrap">
             {/* Left: Channel Info */}
-            <div className="flex items-center space-x-4 justify-between md:justify-normal">
+            <div className="flex w-full md:w-auto items-center space-x-4 justify-between md:justify-normal">
               <div className="flex items-center space-x-2 ">
                 <Link to={`/profile/${video?.owner?.username}`}>
                   <img
@@ -249,7 +261,10 @@ const VideoPage = () => {
 
           <div className="relative flex items-center space-x-4 pb-8">
             <img
-              src={userData?.avatar}
+              src={
+                userData?.avatar ||
+                "https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_640.png"
+              }
               alt="User Avatar"
               className="w-10 h-10 rounded-full object-cover"
             />
@@ -267,6 +282,7 @@ const VideoPage = () => {
                 <EmojiEmotionsOutlinedIcon style={{ color: "gold" }} />
                 <div className="flex items-center">
                   <Button
+                    disabled={!userStatus}
                     onClick={() => {
                       reset();
                       setContent("");
@@ -282,7 +298,11 @@ const VideoPage = () => {
                     </span>{" "}
                   </Button>
                   {content ? (
-                    <Button py={1} onClick={handleEditComment}>
+                    <Button
+                      disabled={!userStatus}
+                      py={1}
+                      onClick={handleEditComment}
+                    >
                       <span className="flex items-center text-sm gap-x-2">
                         <BrowserUpdatedIcon
                           style={{ color: "green", height: "20px" }}
@@ -291,7 +311,7 @@ const VideoPage = () => {
                       </span>{" "}
                     </Button>
                   ) : (
-                    <Button py={1} type="submit">
+                    <Button disabled={!userStatus} py={1} type="submit">
                       <span className="flex items-center text-sm gap-x-2">
                         <AddCommentOutlinedIcon
                           style={{ color: "green", height: "20px" }}
@@ -322,7 +342,7 @@ const VideoPage = () => {
               </h1>
             )}
 
-            {comments &&
+            {comments?.length >= 0 && userStatus ? (
               comments?.map((comment) => (
                 <Comment
                   key={comment._id}
@@ -335,7 +355,14 @@ const VideoPage = () => {
                   setLikeCommentChange={setLikeCommentChange}
                   likeCommentChange={likeCommentChange}
                 />
-              ))}
+              ))
+            ) : (
+              <h1 className="text-2xl p-4 text-gray-600 font-thin">
+                {userStatus
+                  ? "No any comments yet, be the first one to comment."
+                  : "Please login to see comments."}
+              </h1>
+            )}
           </div>
         </div>
       </div>

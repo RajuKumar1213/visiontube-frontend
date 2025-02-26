@@ -10,7 +10,7 @@ const Alert = () => {
 
   return (
     <div
-      className={`fixed top-16 z-50 right-[-290px] p-4 rounded-l-lg rounded-r-sm shadow-md transition-transform duration-500 ease-in-out transform border-l-8  
+      className={`fixed md:top-16 bottom-4 md:bottom-auto z-50 md:right-[-290px] right-[-300px] p-4 rounded-l-lg rounded-r-sm shadow-md transition-transform duration-500 ease-in-out transform border-l-8 
         ${isVisible ? "translate-x-[-300px]" : "translate-x-0"}
         ${
           type === "success"

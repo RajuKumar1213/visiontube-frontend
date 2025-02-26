@@ -58,7 +58,7 @@ const Header = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="flex-grow mx-4 max-w-2xl ">
+        <div className="flex-grow mx-4 max-w-2xl hidden md:block">
           <div className=" flex items-center">
             <input
               onChange={(e) => dispatch(setSearchQuery(e.target.value))}
