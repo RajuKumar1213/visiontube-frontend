@@ -95,11 +95,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/watch/:videoId",
-        element: (
-          <AuthLayout authentication={false}>
-            <VideoWatchPage />,
-          </AuthLayout>
-        ),
+        element: <VideoWatchPage />,
       },
       {
         path: "/upload",

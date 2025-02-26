@@ -15,7 +15,6 @@ const VideoCard = ({
   padding = 2,
 }) => {
   const userStatus = useSelector((state) => state.auth.status);
-  console.log(userStatus);
 
   const navigate = useNavigate();
   const handleMakeVideoWatchAndHistory = () => {
@@ -76,10 +75,9 @@ const VideoCard = ({
           {/* Channel Name */}
 
           {/* Views and Upload Time */}
-          <div className="flex items-center text-sm text-gray-500 ">
+          <div className="flex items-center text-sm text-gray-500">
             {props?.owner[0]?.fullName}
-            <br />
-            <div className="hidden md:block">
+            <div className="">
               <span className="flex items-center ">
                 <CheckCircleIcon
                   className="text-gray-500 ml-1 "
@@ -87,7 +85,8 @@ const VideoCard = ({
                 />
               </span>
             </div>
-            <span className="mx-1">•</span>
+          </div>
+          <div className="flex items-center text-sm text-gray-500 ">
             <p>{props?.views} views</p>
             <span className="mx-1">•</span>
             <p>{format(props?.createdAt)}</p>

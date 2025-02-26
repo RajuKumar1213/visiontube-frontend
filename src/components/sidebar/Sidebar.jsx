@@ -5,12 +5,44 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 import PlaylistPlayOutlinedIcon from "@mui/icons-material/PlaylistPlayOutlined";
 import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import Users from "../Users";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const sidebarTState = useSelector((state) => state.toggleSide.toggleState);
+  const userStatus = useSelector((state) => state.auth.status);
+
+  const sideNavList = [
+    {
+      name: "Home",
+      icon: <HomeOutlinedIcon />,
+      url: "/",
+    },
+    {
+      name: "History",
+      icon: <HistoryOutlinedIcon />,
+      url: userStatus ? "/watch-history" : "/feed/history",
+    },
+    {
+      name: "You",
+      icon: <AccountCircleOutlinedIcon />,
+      url: userStatus ? "/feed-you" : "/feed/you",
+    },
+    {
+      name: "Subscriptions",
+      icon: <SubscriptionsOutlinedIcon />,
+      url: userStatus ? "/subscriptions" : "/feed/subscriptions",
+    },
+    {
+      name: "Liked",
+      icon: <ThumbUpAltOutlinedIcon />,
+      url: userStatus ? "/liked-videos" : "/feed/liked-videos",
+    },
+  ];
 
   return (
     <div className={`relative`}>
@@ -51,56 +83,18 @@ const Sidebar = () => {
                 </span>
               </div>
             </li>
-            <li>
-              <a
-                onClick={() => dispatch(closeSidebar())}
-                href="#"
-                className="flex items-center space-x-2 hover:bg-slate-700 p-2 rounded-md transition duration-200"
-              >
-                <HomeOutlinedIcon />
-                <span>Home</span>
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={() => dispatch(closeSidebar())}
-                href="#"
-                className="flex items-center space-x-2 hover:bg-slate-700 p-2 rounded-md transition duration-200"
-              >
-                <HistoryOutlinedIcon />
-                <span>History</span>
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={() => dispatch(closeSidebar())}
-                href="#"
-                className="flex items-center space-x-2 hover:bg-slate-700 p-2 rounded-md transition duration-200"
-              >
-                <PlaylistPlayOutlinedIcon />
-                <span>Playlist</span>
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={() => dispatch(closeSidebar())}
-                href="#"
-                className="flex items-center space-x-2 hover:bg-slate-700 p-2 rounded-md transition duration-200"
-              >
-                <WatchLaterOutlinedIcon />
-                <span>Watch later</span>
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={() => dispatch(closeSidebar())}
-                href="#"
-                className="flex items-center space-x-2 hover:bg-slate-700 p-2 rounded-md transition duration-200"
-              >
-                <ThumbUpAltOutlinedIcon />
-                <span>Liked videos</span>
-              </a>
-            </li>
+
+            {sideNavList.map((item) => (
+              <Link to={item.url} key={item.url}>
+                <li
+                  onClick={() => dispatch(closeSidebar())}
+                  className="flex items-center space-x-2  hover:bg-slate-700 p-2 rounded-md transition duration-200 my-3"
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
+                </li>
+              </Link>
+            ))}
 
             <h2 className="border-t border-gray-600 mt-4 pt-4">
               Subscriptions
