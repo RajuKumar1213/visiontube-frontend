@@ -49,7 +49,7 @@ const VideoCard = ({
           onClick={handleMakeVideoWatchAndHistory}
           src={props?.thumbnail} // Replace with dynamic thumbnail URL
           alt="Video Thumbnail"
-          className={` ${className} object-cover rounded-lg w-full`}
+          className={` ${className} object-cover min-h-56 rounded-lg w-full`}
         />
         {/* Video Duration */}
         <div className="absolute bottom-2 right-2 bg-black bg-opacity-55 text-white text-sm px-2.5 py-0.5 rounded-md">
@@ -74,18 +74,19 @@ const VideoCard = ({
           </h3>
 
           {/* Channel Name */}
-          <p className="text-sm text-gray-500 ">
-            <span className="flex items-center">
-              {props?.owner[0]?.fullName}
-              <CheckCircleIcon
-                className="text-gray-500 ml-1"
-                style={{ fontSize: "15px" }}
-              />
-            </span>
-          </p>
 
           {/* Views and Upload Time */}
           <div className="flex items-center text-sm text-gray-500 ">
+            {props?.owner[0]?.fullName}
+            <div className="hidden md:block">
+              <span className="flex items-center ">
+                <CheckCircleIcon
+                  className="text-gray-500 ml-1 "
+                  style={{ fontSize: "15px" }}
+                />
+              </span>
+            </div>
+            <span className="mx-1">•</span>
             <p>{props?.views} views</p>
             <span className="mx-1">•</span>
             <p>{format(props?.createdAt)}</p>
