@@ -44,7 +44,7 @@ function HomePage() {
       <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2 gap-2 grid-cols-1">
         {filteredVideos.length === 0 ? (
           <h1 className="text-center text-2xl font-thin text-gray-500">
-            {/* No videos found for "{searchQuery}" */}
+            No videos found
           </h1>
         ) : (
           filteredVideos?.map((video) => (

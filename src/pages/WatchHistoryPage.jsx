@@ -30,8 +30,13 @@ function WatchHistoryPage() {
         </h1>
       )}{" "} */}
 
-      {video?.length <= 0 ? (
+      {!video ? (
         <img className="h-20 w-20 mx-auto" src={spinner} alt="" />
+      ) : video?.length === 0 ? (
+        <h1 className="text-center text-gray-500 pt-20 text-2xl font-thin">
+          No watch history found, Start watching videos to make a beatiful watch
+          history.
+        </h1>
       ) : (
         video.map((video) => (
           <VideoCard

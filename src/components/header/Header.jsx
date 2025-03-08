@@ -100,7 +100,6 @@ const Header = () => {
           {!userStatus && (
             <Link to="/login">
               <Button className="flex items-center">
-                {" "}
                 <AccountCircleOutlinedIcon />{" "}
                 <span className="ml-1">Sign in</span>
               </Button>
