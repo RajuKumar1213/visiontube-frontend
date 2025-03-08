@@ -81,7 +81,7 @@ const CreatePlaylist = () => {
             type: "success",
           })
         );
-        navigate("/dashboard");
+        navigate(`/profile/${userData?.username}`);
       }
     });
   };
