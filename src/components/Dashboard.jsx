@@ -60,7 +60,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className=" flex-1 text-white min-h-screen px-4 py-2  rounded-lg m-2  mb-8">
+    <div className=" flex-1 text-white min-h-screen  py-2  rounded-lg m-2  mb-8">
       {/* User Profile Section */}
       <div className="relative ">
         <img
@@ -119,7 +119,7 @@ const Dashboard = () => {
       </div>
 
       {/* Analytics Section */}
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6">
         <Card>
           <h2 className="text-xl font-semibold">Total Views</h2>
           <p className="text-3xl font-bold mt-2">{channelStatus?.totalViews}</p>
@@ -170,7 +170,12 @@ const Dashboard = () => {
         ) : (
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 ">
             {recentSubscribers?.map((subscriber) => (
-              <RecentSubscribers key={subscriber._id} props={subscriber} />
+              <Link
+                key={subscriber._id}
+                to={`/profile/${subscriber?.username}`}
+              >
+                <RecentSubscribers props={subscriber} />
+              </Link>
             ))}
           </div>
         )}

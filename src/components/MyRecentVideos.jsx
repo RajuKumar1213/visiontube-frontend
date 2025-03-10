@@ -13,67 +13,78 @@ import Button from "./Button";
 
 function MyRecentVideos({ props }) {
   return (
-    <div className="relative p-6 w-full bg-secondary my-4 rounded-xl">
-      {/* Thumbnail */}
-      <div className="relative flex  pb-6 space-x-8 max-w-4xl">
-        <Link to={`/watch/${props?._id}`}>
+    <div className="relative p-4 sm:p-6 w-full bg-secondary my-4 rounded-xl">
+      {/* Video Info Section */}
+      <div className="flex items-start ">
+        {/* Thumbnail */}
+        <Link to={`/watch/${props?._id}`} className="mr-2 md:mr-6">
           <img
-            src={props?.thumbnail} // Replace with dynamic thumbnail URL
+            src={props?.thumbnail}
             alt="Video Thumbnail"
-            className=" h-48 md:min-w-[330px] inline-block object-cover rounded-xl"
+            className="w-24 h-16 md:w-48 md:h-32 object-cover rounded-xl"
           />
         </Link>
-        <div>
-          <h3 className="text-2xl font-semibold text-gray-300 line-clamp-2 mb-4">
+
+        {/* Video Title & Description */}
+        <div className="flex-1">
+          <h3 className="text-sm mr-5 md:text-lg sm:text-2xl font-semibold text-gray-300 line-clamp-2 ">
             {props?.title.substring(0, 80)}
           </h3>
-          <p className="text-gray-400 line-clamp-3">{props?.description}</p>
+          <p className="text-gray-400 text-sm sm:text-base md:mt-2 line-clamp-3">
+            {props?.description}
+          </p>
         </div>
+        {/* Edit Button */}
+        <Link
+          to={`/edit-video/${props?._id}`}
+          className="absolute top-6 right-6 md:top-3 md:right-3 hidden md:block sopacity-75 "
+        >
+          <Button className=" bg-secondary text-white flex items-center gap-x-1 px-4 py-1">
+            <EditOutlinedIcon />
+            <span>Edit</span>
+          </Button>
+        </Link>
+        <Link
+          to={`/edit-video/${props?._id}`}
+          className="absolute top-2 right-2 block md:hidden sopacity-65 "
+        >
+          <span className="border border-gray-400 p-1 flex justify-center items-center rounded-full">
+            <EditOutlinedIcon />
+          </span>
+        </Link>
       </div>
 
-      <div className="flex justify-between pt-4 space-x-3 border-t border-slate-600">
-        <div className="flex items-center text-sm text-gray-300 mt-1 gap-x-5">
-          <p className="flex items-center gap-x-2">
-            {" "}
-            <EqualizerOutlinedIcon /> {props?.views}
+      {/* Stats & Actions */}
+      <div className="mt-4 flex justify-between items-start sm:items-center pt-4 border-t border-slate-600  ">
+        {/* Stats Section */}
+        <div className="flex items-center text-sm text-gray-300 gap-x-4 md:gap-x-6 flex-wrap">
+          <p className="flex items-center gap-x-1">
+            <EqualizerOutlinedIcon className="text-gray-400" /> {props?.views}
           </p>
-          <span className="flex items-center justify-center ml-4 gap-x-2">
-            <ThumbUpOutlinedIcon /> 0
-          </span>
-          <span className="flex items-center justify-center ml-4 gap-x-2">
-            <CommentOutlinedIcon /> 0
-          </span>
+          <p className="flex items-center gap-x-1">
+            <ThumbUpOutlinedIcon className="text-gray-400" /> 0
+          </p>
+          <p className="flex items-center gap-x-1">
+            <CommentOutlinedIcon className="text-gray-400" /> 0
+          </p>
         </div>
-        <p className="flex items-center gap-x-2">
-          {props.isPublished ? (
-            <>
-              <span className="text-green-400 text-sm">Published</span>{" "}
-              <PublicOutlinedIcon />{" "}
-            </>
-          ) : (
-            <>
-              <span className="text-red-600 text-sm">Unpublished</span>
-              <PublicOffOutlinedIcon />
-            </>
-          )}
 
-          <span className="text-sm font-semibold text-gray-400 ml-2 ">
+        {/* Publish Status & Date */}
+        <p className="flex items-center gap-x-2 text-sm">
+          {props.isPublished ? (
+            <span className="text-green-400 flex items-center gap-x-1">
+              Published <PublicOutlinedIcon />
+            </span>
+          ) : (
+            <span className="text-red-600 flex items-center gap-x-1">
+              Unpublished <PublicOffOutlinedIcon />
+            </span>
+          )}
+          <span className="text-gray-400 ml-2">
             first {format(props?.createdAt).split("ago")[0]}
           </span>
         </p>
       </div>
-
-      <Link to={`/edit-video/${props?._id}`}>
-        <Button
-          className="mt-4 absolute  top-0 right-2 bg-secondary text-white flex items-center gap-x-1"
-          py={1}
-          px={4}
-        >
-          {" "}
-          <EditOutlinedIcon />
-          <span>Edit</span>
-        </Button>
-      </Link>
     </div>
   );
 }
