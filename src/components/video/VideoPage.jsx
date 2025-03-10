@@ -20,6 +20,7 @@ import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
 import { showTimedAlert } from "../../redux/features/alertSlice";
 import extractErrorMessage from "../../utils/extractErrorMessage";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import spinner from "/spinner.svg";
 
 const VideoPage = () => {
   // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -39,6 +40,9 @@ const VideoPage = () => {
   const [subscriberChange, setSubscriberChange] = useState(false);
   const [likeChange, setLikeChange] = useState(false);
   const [likeCommentChange, setLikeCommentChange] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [videoLikeLoading, setVideoLikeLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
 
   const onEmojiClick = (event, emojiObject) => {
     setContent((prevContent) => prevContent + emojiObject.emoji);
@@ -83,9 +87,11 @@ const VideoPage = () => {
   // like a video
   const handleLikeVideo = () => {
     if (video) {
+      setVideoLikeLoading(true);
       likeService.likeVideo(video._id).then((response) => {
         if (response.statusCode === 200) {
           setLikeChange(!likeChange);
+          setVideoLikeLoading(false);
         }
       });
     }
@@ -95,12 +101,14 @@ const VideoPage = () => {
 
   const toggleSubscribe = () => {
     if (userData) {
+      setLoading(true);
       subscriptionService
         .toggleSubscribe(video?.owner?._id)
         .then((response) => {
           if (response.statusCode === 200) {
             setIsSubscribed(!isSubscribed);
             setSubscriberChange(!subscriberChange);
+            setLoading(false);
           }
         });
     } else {
@@ -114,6 +122,7 @@ const VideoPage = () => {
   };
 
   const handleComment = (data) => {
+    setCommentLoading(true);
     commentService
       .createComment(video?._id, data)
       .then((response) => {
@@ -124,6 +133,7 @@ const VideoPage = () => {
               type: "success",
             })
           );
+          setCommentLoading(false);
           setCommentChange(!commentChange);
           reset();
         }
@@ -143,6 +153,7 @@ const VideoPage = () => {
 
   const handleEditComment = () => {
     const newContent = getValues("content");
+    setCommentLoading(true);
     commentService
       .updateComment(commentId, { content: newContent, videoId: video?._id })
       .then((response) => {
@@ -153,6 +164,7 @@ const VideoPage = () => {
               type: "success",
             })
           );
+          setCommentLoading(false);
           setContent("");
           setCommentChange(!commentChange);
         }
@@ -212,13 +224,19 @@ const VideoPage = () => {
               <Button
                 hover={`${isSubscribed ? "bg-gray-700" : "bg-red-700"}`}
                 onClick={toggleSubscribe}
-                className={`ml-6 ${
+                className={`ml-6 min-w-28 ${
                   isSubscribed
                     ? "bg-gray-500 text-white"
                     : "bg-red-600 text-white"
                 }   font-semibold `}
               >
-                {isSubscribed ? "Subscribed" : "Subscribe"}
+                {loading ? (
+                  <img className="w-6 h-6" src={spinner} alt="" />
+                ) : isSubscribed ? (
+                  "Subscribed"
+                ) : (
+                  "Subscribe"
+                )}
               </Button>
             </div>
 
@@ -229,7 +247,13 @@ const VideoPage = () => {
                 className="flex items-center rounded-r-lg m-0"
                 py={1}
               >
-                {!likeChange ? <ThumbUpIcon /> : <ThumbUpAltOutlinedIcon />}
+                {videoLikeLoading ? (
+                  <img className="w-6 h-6" src={spinner} alt="" />
+                ) : !likeChange ? (
+                  <ThumbUpIcon />
+                ) : (
+                  <ThumbUpAltOutlinedIcon />
+                )}
                 <span className="ml-1">{video?.totalLikes}</span>
               </Button>
               <Button className="flex items-center rounded-l-lg m-0" py={1}>
@@ -307,16 +331,24 @@ const VideoPage = () => {
                         <BrowserUpdatedIcon
                           style={{ color: "green", height: "20px" }}
                         />
-                        Update
+                        {commentLoading ? (
+                          <img className="w-5 h-5" src={spinner} alt="" />
+                        ) : (
+                          "Update"
+                        )}
                       </span>{" "}
                     </Button>
                   ) : (
                     <Button disabled={!userStatus} py={1} type="submit">
-                      <span className="flex items-center text-sm gap-x-2">
+                      <span className="flex items-center text-sm gap-x-2 ">
                         <AddCommentOutlinedIcon
                           style={{ color: "green", height: "20px" }}
                         />
-                        Comment
+                        {commentLoading ? (
+                          <img className="w-5 h-5" src={spinner} alt="" />
+                        ) : (
+                          "Comment"
+                        )}
                       </span>{" "}
                     </Button>
                   )}

@@ -181,7 +181,7 @@ const UploadVideo = () => {
         <div className="flex gap-8 mt-4">
           <Button
             type="submit"
-            className="flex justify-center items-center my-4 min-w-60 rounded-lg "
+            className="flex justify-center items-center my-4 min-w-28 md:min-w-56 rounded-lg "
           >
             {loading && <img src={spinner} alt="" className="w-6 mr-3" />}
             {/* {isUploading ? `Uploading... ${progress}%` : "Upload"} */}

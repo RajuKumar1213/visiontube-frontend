@@ -9,6 +9,7 @@ import likeService from "../services/like.service";
 import { useDispatch } from "react-redux";
 import { showTimedAlert } from "../redux/features/alertSlice";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import spinner from "/spinner.svg";
 
 function Comment({
   props,
@@ -22,6 +23,7 @@ function Comment({
 }) {
   const dispatch = useDispatch();
   const [activeCommentId, setActiveCommentId] = useState(null);
+  const [commentLikeLoading, setCommentLikeLoading] = useState(false);
 
   // Function to toggle menu visibility
   const handleMenuToggle = (commentId) => {
@@ -44,9 +46,11 @@ function Comment({
 
   const handleCommentLike = () => {
     if (props) {
+      setCommentLikeLoading(true);
       likeService.likeComment(props._id).then((response) => {
         if (response.statusCode === 200) {
           setLikeCommentChange(!likeCommentChange);
+          setCommentLikeLoading(false);
         }
       });
     }
@@ -88,7 +92,15 @@ function Comment({
                       onClick={handleCommentLike}
                       className=" flex items-center space-x-2 mr-4 text-xs cursor-pointer"
                     >
-                      <ThumbUpAltOutlinedIcon style={{ fontSize: "20px" }} />
+                      {commentLikeLoading ? (
+                        <img
+                          className="w-5 h-5"
+                          src={spinner}
+                          alt="loading..."
+                        />
+                      ) : (
+                        <ThumbUpAltOutlinedIcon style={{ fontSize: "20px" }} />
+                      )}
                       <span> {props?.totalCommentLikes}</span>
                     </span>
                     <span className="text-xs cursor-pointer">

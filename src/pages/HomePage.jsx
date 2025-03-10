@@ -3,12 +3,14 @@ import { VideoCard } from "../components";
 import videoService from "../services/video.service";
 import { useDispatch, useSelector } from "react-redux";
 import { setProgress } from "../redux/features/progressSlice";
+import spinner from "/spinner.svg";
 
 function HomePage() {
   const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState("");
   // const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const searchQuery = useSelector((state) => state.search.searchQuery);
 
@@ -17,10 +19,11 @@ function HomePage() {
   );
 
   useEffect(() => {
-    dispatch(setProgress(30));
-    window.scrollTo(0, 0);
-    dispatch(setProgress(70));
-    dispatch(setProgress(100));
+    // dispatch(setProgress(30));
+    // window.scrollTo(0, 0);
+    // dispatch(setProgress(70));
+    // dispatch(setProgress(100));
+    setLoading(true);
     videoService
       .getAllVideos(
         { limit: 20, page: 1, sortType: "desc", sortBy: "views" },
@@ -29,6 +32,7 @@ function HomePage() {
       .then((videos) => {
         if (videos.length === 0) return;
         setVideos(videos.data);
+        setLoading(false);
       })
 
       .catch((err) => setError(err));
@@ -41,21 +45,25 @@ function HomePage() {
           {error} . Server is not running.
         </h1>
       )}
-      <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2 gap-2 grid-cols-1">
-        {filteredVideos.length === 0 ? (
-          <h1 className="text-center text-2xl font-thin text-gray-500">
-            No videos found
-          </h1>
-        ) : (
-          filteredVideos?.map((video) => (
+      {loading ? (
+        <div className="w-screen mx-auto">
+          <img className="h-14 w-14" src={spinner} alt="" />
+        </div>
+      ) : filteredVideos.length === 0 ? (
+        <h1 className="text-center text-2xl font-thin text-gray-500">
+          No videos found
+        </h1>
+      ) : (
+        <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
+          {filteredVideos?.map((video) => (
             <VideoCard
               key={video._id}
               props={video}
               className="h-56 md:h-52 w-full"
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
