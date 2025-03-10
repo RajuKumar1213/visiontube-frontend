@@ -4,12 +4,16 @@ import RecentSubscribers from "./RecentSubscribers";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import dashboardService from "../services/dashboard.service";
 import subscriptionService from "../services/subscription.service";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Modal from "./Modal";
 import MyRecentVideos from "./MyRecentVideos";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { set } from "react-hook-form";
+import authService from "../services/auth.service";
+import spinner from "/spinner.svg";
+import { showTimedAlert } from "../redux/features/alertSlice";
 
 const Dashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
@@ -18,12 +22,18 @@ const Dashboard = () => {
   const [recentUploaedVideos, setRecentUploadedVideos] = useState([]);
   const [recentSubscribers, setRecentSubscribers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [oldImageUrl, setOldImageUrl] = useState(channelStatus?.coverImage);
+  const [newImagePreview, setNewImagePreview] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dashboardService
       .getChannelStats()
       .then((data) => {
         setChannelStatus(data.data);
+        setOldImageUrl(data.data?.coverImage);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -59,6 +69,46 @@ const Dashboard = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setNewImagePreview(URL.createObjectURL(file));
+      authService.updateCoverImage(file).then((res) => {
+        if (res.statusCode === 200) {
+          window.location.reload();
+        }
+      });
+    } else {
+      setNewImagePreview(null);
+    }
+  };
+
+  const handleUpload = () => {
+    // Logic to upload the new image
+    setUploadLoading(true);
+    if (newImagePreview) {
+      authService
+        .updateCoverImage(newImagePreview)
+        .then((res) => {
+          if (res.statusCode === 200) {
+            setUploadLoading(false);
+            setIsModalOpen(false);
+            dispatch(
+              showTimedAlert({
+                message: "Cover image updated successfully",
+                type: "success",
+                duration: 3000,
+              })
+            );
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
+
   return (
     <div className=" flex-1 text-white min-h-screen py-2 rounded-lg m-2 mb-8">
       {/* User Profile Section */}
@@ -79,12 +129,56 @@ const Dashboard = () => {
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <Modal
-          onClose={() => setIsModalOpen(false)}
-          oldImageUrl={channelStatus?.coverImage}
-        />
-      )}
+      {/* Modal Component */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2 className="text-xl font-semibold mb-4">Update Cover Image</h2>
+        <div>
+          <p className="mb-2 text-gray-500">Current Image:</p>
+          {!oldImageUrl && (
+            <h2 className="text-gray-500 mb-4">No Previous Image</h2>
+          )}
+          {oldImageUrl && (
+            <img
+              src={oldImageUrl}
+              alt="Old Cover"
+              className="mb-4 w-full h-40 object-cover rounded-md"
+            />
+          )}
+        </div>
+        <div>
+          <input
+            onChange={handleFileChange}
+            type="file"
+            accept="image/*"
+            className="mb-4 block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-md file:border-0
+            file:text-sm file:font-semibold
+          file:bg-blue-50 file:text-blue-700
+          hover:file:bg-blue-100
+            cursor-pointer"
+          />
+
+          {newImagePreview && (
+            <div className="mb-3">
+              <p className="text-gray-500">Preview:</p>
+              <img
+                src={newImagePreview}
+                alt="New Preview"
+                className="w-full h-40 object-cover rounded-md"
+              />
+            </div>
+          )}
+        </div>
+        <div className="flex justify-between">
+          <button
+            onClick={handleUpload}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md w-24 flex justify-center items-center"
+          >
+            {uploadLoading ? <img src={spinner} alt="Spinner" /> : "Upload"}
+          </button>
+        </div>
+      </Modal>
 
       <div className="relative flex items-center flex-col justify-center gap-4">
         <div className="relative -top-16 group w-36 h-36 -mb-16">
