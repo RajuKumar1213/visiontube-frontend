@@ -168,14 +168,9 @@ const Dashboard = () => {
             No recent subscribers yet.
           </p>
         ) : (
-          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 ">
+          <div className=" flex mt-6 mx-3 gap-6 overflow-x-scroll">
             {recentSubscribers?.map((subscriber) => (
-              <Link
-                key={subscriber._id}
-                to={`/profile/${subscriber?.username}`}
-              >
-                <RecentSubscribers props={subscriber} />
-              </Link>
+              <RecentSubscribers key={subscriber._id} props={subscriber} />
             ))}
           </div>
         )}
