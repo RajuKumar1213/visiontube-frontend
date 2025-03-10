@@ -60,7 +60,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className=" flex-1 text-white min-h-screen  py-2  rounded-lg m-2  mb-8">
+    <div className=" flex-1 text-white min-h-screen py-2 rounded-lg m-2 mb-8">
       {/* User Profile Section */}
       <div className="relative ">
         <img

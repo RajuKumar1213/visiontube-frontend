@@ -3,7 +3,7 @@ import { Dashboard } from "../../components";
 
 function DashboardPage() {
   return (
-    <div className="md:mt-20 mt-10">
+    <div className="md:mt-20 mt-16">
       <Dashboard />
     </div>
   );
