@@ -45,21 +45,27 @@ function HomePage() {
           {error} . Server is not running.
         </h1>
       )}
-      <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
+      <div>
         {loading ? (
-          <img className="h-14 w-14" src={spinner} alt="" />
+          <img
+            className="h-10 w-10 mt-24 flex justify-center mx-auto"
+            src={spinner}
+            alt=""
+          />
         ) : filteredVideos.length === 0 ? (
           <h1 className="text-center text-2xl font-thin text-gray-500">
             No videos found
           </h1>
         ) : (
-          filteredVideos?.map((video) => (
-            <VideoCard
-              key={video._id}
-              props={video}
-              className="h-56 md:h-52 w-full"
-            />
-          ))
+          <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
+            {filteredVideos?.map((video) => (
+              <VideoCard
+                key={video._id}
+                props={video}
+                className="h-56 md:h-52 w-full"
+              />
+            ))}
+          </div>
         )}
       </div>
     </>

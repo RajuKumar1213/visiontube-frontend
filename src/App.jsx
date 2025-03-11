@@ -52,7 +52,7 @@ function App() {
       </Container>
     </div>
   ) : (
-    <img src={spinner} alt="" className="w-24 mx-auto my-auto h-screen" />
+    <img src={spinner} alt="" className="w-14 mx-auto my-auto h-screen" />
   );
 }
 export default App;
