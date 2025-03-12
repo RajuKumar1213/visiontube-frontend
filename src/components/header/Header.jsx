@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../components";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/features/authSlice";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
@@ -18,6 +18,8 @@ const Header = () => {
   const userData = useSelector((state) => state.auth.userData);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [openSearchBar, setOpenSearchBar] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const toggleDropdown = () => {
@@ -33,6 +35,16 @@ const Header = () => {
     );
     setIsDropdownOpen(false);
   };
+
+  // handeling search
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() !== "") {
+      navigate(`/videos?query=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm("");
+    }
+  };
+
   return (
     <div className="realative bg-secondary fixed top-0 w-full z-20">
       {openSearchBar && (
@@ -68,31 +80,37 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="flex-grow mx-4 max-w-2xl hidden md:block">
-          <div className=" flex items-center">
-            <input
-              onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-              type="text"
-              placeholder="Search"
-              className="h-10 w-full py-2 px-8 rounded-l-full bg-secondary ring-1 ring-slate-700 placeholder-gray-500 shadow focus:outline-none focus:ring-1 focus:ring-blue-600 text-white"
-            />
-            <button className="ring-1 ring-slate-700 right-2 h-10 bg-primary text-white px-8 rounded-r-full hover:bg-slate-700 transition duration-200">
-              {/* search icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-5 h-5"
+          <form onSubmit={handleSearch}>
+            <div className=" flex items-center">
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                type="text"
+                placeholder="Search"
+                className="h-10 w-full py-2 px-8 rounded-l-full bg-secondary ring-1 ring-slate-700 placeholder-gray-500 shadow focus:outline-none focus:ring-1 focus:ring-blue-600 text-white"
+              />
+              <button
+                type="submit"
+                className="ring-1 ring-slate-700 right-2 h-10 bg-primary text-white px-8 rounded-r-full hover:bg-slate-700 transition duration-200"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-          </div>
+                {/* search icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </form>
         </div>
 
         {userStatus && (
