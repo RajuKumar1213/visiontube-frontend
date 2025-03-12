@@ -57,7 +57,7 @@ function HomePage() {
             No videos found
           </h1>
         ) : (
-          <div className="pt-20 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
+          <div className="py-14 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
             {filteredVideos?.map((video) => (
               <VideoCard
                 key={video._id}

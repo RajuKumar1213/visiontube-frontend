@@ -181,7 +181,7 @@ const VideoPage = () => {
   };
 
   return (
-    <div className=" min-h-screen md:p-4 mt-4 ">
+    <div className=" min-h-screen md:p-4">
       {/* Video Section */}
       <div className="mx-auto md:rounded-lg shadow-md overflow-hidden">
         {/* Video Player */}
