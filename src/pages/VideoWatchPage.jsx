@@ -11,7 +11,6 @@ function VideoWatchPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     window.scrollTo(0, 0);
     videoService
       .getAllVideos(
