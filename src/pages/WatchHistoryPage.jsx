@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { VideoCard } from "../components";
 import authService from "../services/auth.service";
-import videoService from "../services/video.service";
-import spinner from "/spinner.svg";
+import Spinner from "../components/Spinner";
 
 function WatchHistoryPage() {
   const [video, setVideo] = useState([]);
@@ -26,7 +25,7 @@ function WatchHistoryPage() {
       <h1 className="text-3xl font-bold mb-6 m-8">Watch History</h1>
 
       {loading ? (
-        <img className="h-10 w-10 mx-auto" src={spinner} alt="" />
+        <Spinner />
       ) : video?.length === 0 ? (
         <h1 className="text-center text-gray-500 pt-20 text-2xl font-thin">
           No watch history found, Start watching videos to make a beatiful watch

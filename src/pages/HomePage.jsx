@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { VideoCard } from "../components";
 import videoService from "../services/video.service";
 import { useDispatch, useSelector } from "react-redux";
-import { setProgress } from "../redux/features/progressSlice";
-import spinner from "/spinner.svg";
 import { useLocation } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 function HomePage() {
   const location = useLocation();
@@ -42,11 +41,7 @@ function HomePage() {
       )}
       <div>
         {loading ? (
-          <img
-            className="h-10 w-10 mt-24 flex justify-center mx-auto"
-            src={spinner}
-            alt=""
-          />
+          <Spinner />
         ) : videos.length === 0 ? (
           <h1 className="text-center text-2xl font-thin text-gray-500 mt-20 p-2">
             {query

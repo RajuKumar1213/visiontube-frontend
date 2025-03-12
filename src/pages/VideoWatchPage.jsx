@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { VideoCard, VideoPage } from "../components";
 import videoService from "../services/video.service";
 import { useDispatch } from "react-redux";
-import spinner from "/spinner.svg";
+import Spinner from "../components/Spinner";
 
 function VideoWatchPage() {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ function VideoWatchPage() {
   }, [videoService]);
 
   return (
-    <div className="md:mt-14 mt-10 grid grid-cols-1 md:grid-cols-12 gap-2">
+    <div className="md:mt-16 mt-10 grid grid-cols-1 md:grid-cols-12 gap-2">
       {/* Left Section - VideoPage */}
       <div className="md:col-span-7">
         <VideoPage />
@@ -39,13 +39,9 @@ function VideoWatchPage() {
         <h1 className="mt-6 text-2xl font-semibold">
           Watch more related videos
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-2 mt-4 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-1 mt-4 mb-16">
           {loading ? (
-            <img
-              className="h-8 w-8 mx-auto mt-4"
-              src={spinner}
-              alt="loading..."
-            />
+            <Spinner />
           ) : (
             videos &&
             videos.map((video) => (
