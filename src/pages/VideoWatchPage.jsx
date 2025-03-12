@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { VideoCard, VideoPage } from "../components";
 import videoService from "../services/video.service";
 import { useDispatch } from "react-redux";
+import spinner from "/spinner.svg";
 
 function VideoWatchPage() {
   const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     window.scrollTo(0, 0);
     videoService
       .getAllVideos(
@@ -18,10 +21,10 @@ function VideoWatchPage() {
       .then((videos) => {
         if (videos.length === 0) return;
         setVideos(videos.data);
+        setLoading(false);
       })
       .catch((err) => {
         setError(err);
-        console.error(err);
       });
   }, [videoService]);
 
@@ -38,7 +41,14 @@ function VideoWatchPage() {
           Watch more related videos
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-1 gap-2 mt-4 mb-16">
-          {videos &&
+          {loading ? (
+            <img
+              className="h-8 w-8 mx-auto mt-4"
+              src={spinner}
+              alt="loading..."
+            />
+          ) : (
+            videos &&
             videos.map((video) => (
               <div
                 onClick={() => (window.location.href = `/watch/${video._id}`)}
@@ -51,7 +61,8 @@ function VideoWatchPage() {
                   props={video}
                 />
               </div>
-            ))}
+            ))
+          )}
         </div>
       </div>
     </div>

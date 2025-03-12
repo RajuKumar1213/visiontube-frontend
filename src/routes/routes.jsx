@@ -153,6 +153,14 @@ export const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
+      {
+        path: "/videos",
+        element: (
+          <AuthLayout authentication={true}>
+            <HomePage />
+          </AuthLayout>
+        ),
+      },
     ],
   },
 ]);

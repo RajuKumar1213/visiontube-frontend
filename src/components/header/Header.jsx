@@ -11,12 +11,13 @@ import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
 import { showTimedAlert } from "../../redux/features/alertSlice";
 import { setSearchQuery } from "../../redux/features/searchSlice";
 import HomeIcon from "@mui/icons-material/Home";
+import SearchBar from "../video/SearchBar";
 
 const Header = () => {
   const userStatus = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [openSearchBar, setOpenSearchBar] = useState(false);
 
   const dispatch = useDispatch();
   const toggleDropdown = () => {
@@ -34,11 +35,18 @@ const Header = () => {
   };
   return (
     <div className="realative bg-secondary fixed top-0 w-full z-20">
+      {openSearchBar && (
+        <div className="absolute top-0 left-0 w-full z-10 ">
+          <SearchBar onClose={() => setOpenSearchBar(false)} />
+        </div>
+      )}
+
       {/* <Container > */}
       <header className=" text-white px-4 py-2 flex items-center justify-between shadow-md ">
         {/* Logo Section */}
         <div className="flex items-center space-x-4 ">
           <button onClick={() => dispatch(openSidebar())}>
+            {/* hamberger */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -68,6 +76,7 @@ const Header = () => {
               className="h-10 w-full py-2 px-8 rounded-l-full bg-secondary ring-1 ring-slate-700 placeholder-gray-500 shadow focus:outline-none focus:ring-1 focus:ring-blue-600 text-white"
             />
             <button className="ring-1 ring-slate-700 right-2 h-10 bg-primary text-white px-8 rounded-r-full hover:bg-slate-700 transition duration-200">
+              {/* search icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -87,7 +96,10 @@ const Header = () => {
         </div>
 
         {userStatus && (
-          <button className="md:hidden block">
+          <button
+            onClick={(e) => setOpenSearchBar(true)}
+            className="md:hidden block"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -107,7 +119,10 @@ const Header = () => {
 
         {/* Right Section: Avatar and Buttons */}
         <div className="flex items-center justify-around md:justify-end md:space-x-6 fixed bottom-0 left-0 md:static bg-secondary w-full md:w-fit m-0 p-1">
-          <Link className="flex flex-col items-center justify-center" to="/">
+          <Link
+            className="flex flex-col items-center justify-center md:hidden"
+            to="/"
+          >
             <HomeIcon />
             <span className="text-xs text-gray-400">Home</span>
           </Link>
@@ -122,10 +137,10 @@ const Header = () => {
             </Link>
           )}
 
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex md:hidden flex-col justify-center items-center">
             <Link to={`/feed-you`}>
               <img
-                src={ 
+                src={
                   userData?.avatar ||
                   "https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_640.png"
                 }

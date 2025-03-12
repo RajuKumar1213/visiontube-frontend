@@ -4,29 +4,25 @@ import videoService from "../services/video.service";
 import { useDispatch, useSelector } from "react-redux";
 import { setProgress } from "../redux/features/progressSlice";
 import spinner from "/spinner.svg";
+import { useLocation } from "react-router-dom";
 
 function HomePage() {
+  const location = useLocation();
   const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState("");
-  // const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const searchQuery = useSelector((state) => state.search.searchQuery);
+  const queryParams = new URLSearchParams(location.search);
+  const query = queryParams.get("query") || "";
 
-  const filteredVideos = videos.filter((video) =>
-    video.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  console.log(query);
 
   useEffect(() => {
-    // dispatch(setProgress(30));
-    // window.scrollTo(0, 0);
-    // dispatch(setProgress(70));
-    // dispatch(setProgress(100));
     setLoading(true);
     videoService
       .getAllVideos(
-        { limit: 20, page: 1, sortType: "desc", sortBy: "views" },
+        { limit: 20, page: 1, sortType: "desc", sortBy: "views", query },
         dispatch
       )
       .then((videos) => {
@@ -36,7 +32,7 @@ function HomePage() {
       })
 
       .catch((err) => setError(err));
-  }, []);
+  }, [query]);
 
   return (
     <>
@@ -52,13 +48,15 @@ function HomePage() {
             src={spinner}
             alt=""
           />
-        ) : filteredVideos.length === 0 ? (
-          <h1 className="text-center text-2xl font-thin text-gray-500">
-            No videos found
+        ) : videos.length === 0 ? (
+          <h1 className="text-center text-2xl font-thin text-gray-500 mt-20 p-2">
+            {query
+              ? `No results found for "${query}". Try searching for something else.`
+              : "No videos found."}
           </h1>
         ) : (
-          <div className="py-14 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
-            {filteredVideos?.map((video) => (
+          <div className="md:pt-20 pt-14 pb-16 grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1">
+            {videos?.map((video) => (
               <VideoCard
                 key={video._id}
                 props={video}
