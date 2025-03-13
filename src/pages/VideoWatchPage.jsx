@@ -7,10 +7,10 @@ import Spinner from "../components/Spinner";
 function VideoWatchPage() {
   const dispatch = useDispatch();
   const [videos, setVideos] = useState([]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     window.scrollTo(0, 0);
     videoService
       .getAllVideos(
@@ -36,7 +36,7 @@ function VideoWatchPage() {
 
       {/* Right Section - Related Videos */}
       <div className="md:col-span-5">
-        <h1 className="mt-6 text-2xl font-semibold">
+        <h1 className="mt-6 text-xl md:text-2xl font-semibold">
           Watch more related videos
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-1 gap-1 mt-4 mb-16">

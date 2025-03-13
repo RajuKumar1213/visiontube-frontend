@@ -20,7 +20,7 @@ import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
 import { showTimedAlert } from "../../redux/features/alertSlice";
 import extractErrorMessage from "../../utils/extractErrorMessage";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import spinner from "/spinner.svg";
+import SmallSpinner from "../SmallSpinner";
 
 const VideoPage = () => {
   // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -195,14 +195,14 @@ const VideoPage = () => {
         </div>
         {/* Video Info Section */}
         <div className="p-4 mt-56 md:mt-0">
-          <h1 className="text-xl font-semibold ">{video?.title}</h1>
-          <p className="text-gray-500 text-sm mb-4">
+          <h1 className="text-lg md:text-xl font-semibold ">{video?.title}</h1>
+          <p className="text-gray-500 text-xs md:text-sm mb-4">
             {video?.views} views • <span>{format(video?.createdAt)}</span>
           </p>
 
           <div className="flex items-center justify-between flex-wrap md:flex-nowrap">
             {/* Left: Channel Info */}
-            <div className="flex w-full md:w-auto items-center space-x-4 justify-between md:justify-normal">
+            <div className="flex w-full md:w-auto items-center justify-between md:justify-normal">
               <div className="flex items-center space-x-2 ">
                 <Link to={`/profile/${video?.owner?.username}`}>
                   <img
@@ -212,10 +212,10 @@ const VideoPage = () => {
                   />
                 </Link>
                 <div>
-                  <h3 className="text-lg font-medium line-clamp-1 ">
+                  <h3 className="text-sm md:text-base font-medium line-clamp-1 ">
                     {video?.owner?.fullName}
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs md:text-sm text-gray-500">
                     {video?.owner?.subscriberCount} Subscribers
                   </p>
                 </div>
@@ -224,14 +224,15 @@ const VideoPage = () => {
               <Button
                 hover={`${isSubscribed ? "bg-gray-700" : "bg-red-700"}`}
                 onClick={toggleSubscribe}
-                className={`ml-6 min-w-28 ${
+                py={2}
+                className={`ml-6 min-w-28  md:text-sm ${
                   isSubscribed
                     ? "bg-gray-500 text-white"
                     : "bg-red-600 text-white"
                 }   font-semibold `}
               >
                 {loading ? (
-                  <img className="w-6 h-6" src={spinner} alt="" />
+                  <SmallSpinner />
                 ) : isSubscribed ? (
                   "Subscribed"
                 ) : (
@@ -244,11 +245,11 @@ const VideoPage = () => {
             <div className="flex md:items-center items-start my-4 rounded-r-none md:ml-6 ">
               <Button
                 onClick={handleLikeVideo}
-                className="flex items-center rounded-r-lg m-0"
+                className="flex text-sm items-center rounded-r-lg m-0"
                 py={1}
               >
                 {videoLikeLoading ? (
-                  <img className="w-6 h-6" src={spinner} alt="" />
+                  <SmallSpinner />
                 ) : !likeChange ? (
                   <ThumbUpIcon />
                 ) : (
@@ -276,7 +277,7 @@ const VideoPage = () => {
         {/* Comments Section */}
         <div className="pt-6 px-4">
           <div className="flex items-center space-x-10 pb-4 mb-4">
-            <h3 className="text-xl font-semibold ">{} Comments</h3>
+            <h3 className="text-base md:text-xl font-semibold ">{} Comments</h3>
             <Button>
               <SortIcon />
               Sort by
@@ -331,11 +332,7 @@ const VideoPage = () => {
                         <BrowserUpdatedIcon
                           style={{ color: "green", height: "20px" }}
                         />
-                        {commentLoading ? (
-                          <img className="w-5 h-5" src={spinner} alt="" />
-                        ) : (
-                          "Update"
-                        )}
+                        {commentLoading ? <SmallSpinner /> : "Update"}
                       </span>{" "}
                     </Button>
                   ) : (
@@ -344,11 +341,7 @@ const VideoPage = () => {
                         <AddCommentOutlinedIcon
                           style={{ color: "green", height: "20px" }}
                         />
-                        {commentLoading ? (
-                          <img className="w-5 h-5" src={spinner} alt="" />
-                        ) : (
-                          "Comment"
-                        )}
+                        {commentLoading ? <SmallSpinner /> : "Comment"}
                       </span>{" "}
                     </Button>
                   )}

@@ -18,6 +18,7 @@ function HomePage() {
   console.log(query);
 
   useEffect(() => {
+    setLoading(true);
     videoService
       .getAllVideos(
         { limit: 20, page: 1, sortType: "desc", sortBy: "views", query },

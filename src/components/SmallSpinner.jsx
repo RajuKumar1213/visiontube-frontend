@@ -1,14 +1,14 @@
 import React from "react";
 import spinner from "/spinner.svg";
 
-function Spinner() {
+function SmallSpinner({ h = 5, w = 5 }) {
   return (
     <img
-      className="h-8 w-8 mt-24 flex justify-center mx-auto"
+      className={`h-${h} w-${w} flex justify-center mx-auto`}
       src={spinner}
       alt="...Loading"
     />
   );
 }
 
-export default Spinner;
+export default SmallSpinner;
