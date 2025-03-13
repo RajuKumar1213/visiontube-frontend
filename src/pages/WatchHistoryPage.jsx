@@ -23,7 +23,7 @@ function WatchHistoryPage() {
 
   return (
     <div className="mt-20 min-h-fit">
-      <h1 className="text-3xl font-bold mb-6 m-8">Watch History</h1>
+      <h1 className="text-xl md:text-2xl font-bold mb-6 m-8">Watch History</h1>
 
       {loading ? (
         <Spinner />
