@@ -146,7 +146,7 @@ const Header = () => {
           </Link>
           {userStatus && (
             <Link to="/upload">
-              <Button className="flex items-center" py={2} px={4}>
+              <Button className="flex items-center md:px-4 px-2" py={2} px={2}>
                 <span className="md:mr-1 text-gray-300 ">
                   <AddRoundedIcon />
                 </span>
