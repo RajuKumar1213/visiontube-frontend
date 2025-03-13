@@ -156,7 +156,7 @@ const Header = () => {
           )}
 
           <div className="flex md:hidden flex-col justify-center items-center">
-            <Link to={`/feed-you`}>
+            <Link to={`/dashboard`}>
               <img
                 src={
                   userData?.avatar ||
